@@ -1,5 +1,6 @@
 /venv
 /users/views/__pycache__
+/users/migrations/
 /clickviral/__pycache__
 /users/__pycache__
 db.sqlite3
