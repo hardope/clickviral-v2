@@ -11,18 +11,7 @@ class OneUser(APIView):
           operation_summary='Get a single user',
           operation_description='Get a single user',
           responses={
-               200: openapi.Response(
-                    description='OK',
-                    examples={
-                         'application/json': {
-                              'id': 1,
-                              'username': 'john_doe',
-                              'email': 'john@example.com',
-                              'first_name': 'John',
-                              'last_name': 'Doe',
-                         }
-                    }
-               ),
+               200: 'OK',
                404: 'Not Found',
           }
      )
@@ -48,22 +37,9 @@ class OneUser(APIView):
                required=['username', 'password', 'email']
           ),
           responses={
-               200: openapi.Response(
-                    description='OK',
-                    examples={
-                         'application/json': {
-                              'id': 1,
-                              'username': 'john_doe',
-                              'email': 'john@example.com',
-                              'first_name': 'John',
-                              'last_name': 'Doe',
-                              'is_staff': False,
-                              'is_active': True,
-                         }
-                    }
-               ),
+               200: 'OK',
                404: 'Not Found',
-        }
+          }
      )
      def put(self, request, pk):
           user = User.objects.get(pk=pk)

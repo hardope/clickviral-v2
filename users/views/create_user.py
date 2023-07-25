@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
+
 class CreateUser(APIView):
      @swagger_auto_schema(
           operation_summary='Create a new user',
