@@ -1,5 +1,6 @@
 /venv
 /media
+test.*
 /users/views/__pycache__
 /users/migrations/
 /clickviral/__pycache__
