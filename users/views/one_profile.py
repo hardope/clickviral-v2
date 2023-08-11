@@ -13,7 +13,7 @@ class OneProfile(APIView):
      @swagger_auto_schema(
           operation_summary='Get one profile',
           operation_description='Get one profile using id of user',
-          responses={200: openapi.Response(description='OK',)}
+          responses={200: ProfileSerializer}
      )
 
      def get(self, request, pk):
@@ -28,15 +28,7 @@ class OneProfile(APIView):
      @swagger_auto_schema(
           operation_summary='Update one profile',
           operation_description='Update one profile using id of user',
-          request_body=openapi.Schema(
-               type=openapi.TYPE_OBJECT,
-               properties={
-                    'bio': openapi.Schema(type=openapi.TYPE_STRING),
-                    'location': openapi.Schema(type=openapi.TYPE_STRING),
-                    'birth_date': openapi.Schema(type=openapi.TYPE_STRING, format='date'),
-                    'image': openapi.Schema(type=openapi.TYPE_FILE),
-               },
-          ),
+          request_body=ProfileSerializer,
           responses={200: 'OK', 400: 'Bad Request'}
      )
 

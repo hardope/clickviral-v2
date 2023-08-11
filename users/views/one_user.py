@@ -11,7 +11,7 @@ class OneUser(APIView):
           operation_summary='Get a single user',
           operation_description='Get a single user',
           responses={
-               200: 'OK',
+               200: UserSerializer,
                404: 'Not Found',
           }
      )
@@ -27,17 +27,9 @@ class OneUser(APIView):
      @swagger_auto_schema(
           operation_summary='Update a single user',
           operation_description='Update a single user',
-          request_body=openapi.Schema(
-               type=openapi.TYPE_OBJECT,
-               properties={
-                    'username': openapi.Schema(type=openapi.TYPE_STRING),
-                    'password': openapi.Schema(type=openapi.TYPE_STRING, format='password'),
-                    'email': openapi.Schema(type=openapi.TYPE_STRING, format='email'),
-               },
-               required=['username', 'password', 'email']
-          ),
+          request_body=UserSerializer,
           responses={
-               200: 'OK',
+               200: UserSerializer,
                404: 'Not Found',
           }
      )

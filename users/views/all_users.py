@@ -11,23 +11,7 @@ class AllUsers(APIView):
      @swagger_auto_schema(
           operation_summary='Get all users',
           operation_description='Get all users',
-          responses={200: openapi.Response(
-               description='OK',
-               examples={
-                    'application/json': [
-                         {
-                              'id': 1,
-                              'username': 'john_doe',
-                              'email': 'john@gmail.com'
-                              },
-                         {
-                              'id': 2,
-                              'username': 'jane_doe',
-                              'email': 'jane@gmail.com'
-                         }
-                    ]
-               }
-          )}
+          responses={200: UserSerializer(many=True)}
      )
      def get(self, request):
           users = User.objects.all()

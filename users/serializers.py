@@ -1,4 +1,5 @@
 from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 
 from django.contrib.auth.models import User
 from .models import Profile
@@ -14,6 +15,11 @@ class UserSerializer(ModelSerializer):
           user = User.objects.create_user(**validated_data)
           profile = Profile.objects.create(user=user)
           return user
+
+     def validate(self, data):
+          if User.objects.filter(email=data['email']).exists():
+               raise serializers.ValidationError('Email already exists')
+          return data
 
 class ProfileSerializer(ModelSerializer):
      class Meta:

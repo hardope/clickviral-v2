@@ -11,15 +11,7 @@ class CreateUser(APIView):
      @swagger_auto_schema(
           operation_summary='Create a new user',
           operation_description='Create a new user',
-          request_body=openapi.Schema(
-               type=openapi.TYPE_OBJECT,
-               properties={
-                    'username': openapi.Schema(type=openapi.TYPE_STRING),
-                    'password': openapi.Schema(type=openapi.TYPE_STRING, format='password'),
-                    'email': openapi.Schema(type=openapi.TYPE_STRING, format='email'),
-               },
-               required=['username', 'password', 'email']
-          ),
+          request_body=UserSerializer,
           responses={201: 'CREATED', 400: 'Bad Request'}
      )
      def post(self, request):

@@ -12,7 +12,7 @@ class AllProfiles(APIView):
      @swagger_auto_schema(
           operation_summary='Get all profiles',
           operation_description='Get all profiles',
-          responses={200: openapi.Response(description='OK',)}
+          responses={200: ProfileSerializer(many=True)}
      )
 
      def get(self, request):
