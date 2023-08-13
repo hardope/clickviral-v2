@@ -15,6 +15,8 @@ class CreateUser(APIView):
           responses={201: 'CREATED', 400: 'Bad Request'}
      )
      def post(self, request):
+          if request.user.is_authenticated:
+               return Response(status=status.HTTP_400_BAD_REQUEST)
           serializer = UserSerializer(data=request.data)
           if serializer.is_valid():
                serializer.save()

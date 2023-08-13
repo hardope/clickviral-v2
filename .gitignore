@@ -1,8 +1,8 @@
 /venv
 /media
 test.*
-/users/views/__pycache__
-/users/migrations/
-/clickviral/__pycache__
-/users/__pycache__
+/*/*/__pycache__
+/*/migrations/
+/*/__pycache__
+__pycache__
 db.sqlite3
