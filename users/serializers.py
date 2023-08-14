@@ -17,8 +17,10 @@ class UserSerializer(ModelSerializer):
           return user
 
      def validate(self, data):
-          if User.objects.filter(email=data['email']).exists():
-               raise serializers.ValidationError('Email already exists')
+
+          if self.context['request'].method == 'POST':
+               if User.objects.filter(email=data['email']).exists():
+                    raise serializers.ValidationError('Email already exists')
           return data
 
 class ProfileSerializer(ModelSerializer):
