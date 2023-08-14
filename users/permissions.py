@@ -7,9 +7,4 @@ class IsUserOrReadOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        attribute = getattr(obj, 'user', None)
-
-        if attribute:
-            return obj.user == request.user
-
         return obj.id == request.user.id

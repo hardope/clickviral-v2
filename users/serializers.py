@@ -1,8 +1,7 @@
 from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
 
-from django.contrib.auth.models import User
-from .models import Profile
+from .models import UserProfile as User
 
 class UserSerializer(ModelSerializer):
      class Meta:
@@ -13,7 +12,6 @@ class UserSerializer(ModelSerializer):
      def create(self, validated_data):
           
           user = User.objects.create_user(**validated_data)
-          profile = Profile.objects.create(user=user)
           return user
 
      def validate(self, data):
@@ -22,12 +20,3 @@ class UserSerializer(ModelSerializer):
                if User.objects.filter(email=data['email']).exists():
                     raise serializers.ValidationError('Email already exists')
           return data
-
-class ProfileSerializer(ModelSerializer):
-     class Meta:
-          model = Profile
-          fields = '__all__'
-     
-     def create(self, validated_data):
-          profile = Profile.objects.create(**validated_data)
-          return profile

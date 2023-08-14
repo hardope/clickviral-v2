@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User
 from rest_framework.views import APIView
 from rest_framework import status
 from ..serializers import UserSerializer
@@ -17,7 +16,7 @@ class CreateUser(APIView):
      def post(self, request):
           if request.user.is_authenticated:
                return Response(status=status.HTTP_400_BAD_REQUEST)
-          serializer = UserSerializer(data=request.data)
+          serializer = UserSerializer(data=request.data, context={'request': request})
           if serializer.is_valid():
                serializer.save()
                return Response(serializer.data, status=status.HTTP_201_CREATED)

@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from ..models import UserProfile as User
 from rest_framework.views import APIView
 from rest_framework import status
 from ..serializers import UserSerializer
@@ -59,6 +59,6 @@ class OneUser(APIView):
           }
      )
      def delete(self, request, pk):
-          user = User.objects.get(pk=pk)
+          user = self.get_object(pk)
           user.delete()
           return Response(status=status.HTTP_204_NO_CONTENT)

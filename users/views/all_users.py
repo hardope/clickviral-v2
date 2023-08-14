@@ -1,10 +1,10 @@
-from django.contrib.auth.models import User
 from rest_framework.views import APIView
 from rest_framework import status
 from ..serializers import UserSerializer
 from rest_framework.response import Response
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from ..models import UserProfile as User
 
 # Create your views here.
 class AllUsers(APIView):
