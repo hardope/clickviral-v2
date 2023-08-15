@@ -16,8 +16,4 @@ class UserProfile(User):
      birth_date = models.DateField(null=True, blank=True)
      image = models.ImageField(upload_to=user_directory_path, blank=True)
      cover = models.ImageField(upload_to=user_directory_path, blank=True)
-
-     def __str__(self) -> str:
-          return f'{self.user.username} Profile'
-
-     
+     activation = models.UUIDField(default=uuid4, editable=False)
