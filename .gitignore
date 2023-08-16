@@ -1,8 +1,0 @@
-/venv
-/media
-test.*
-/*/*/__pycache__
-/*/migrations/
-/*/__pycache__
-__pycache__
-db.sqlite3

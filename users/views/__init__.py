@@ -1,5 +1,0 @@
-from .all_users import *
-from .create_user import *
-from .one_user import *
-from .auth import *
-from .activate import Activate
