@@ -16,3 +16,9 @@ class Profile(User):
         verbose_name = 'Profile'
         verbose_name_plural = 'Profiles'
         ordering = ['username']
+
+class Account(models.Model):
+
+    user = models.OneToOneField(Profile, on_delete=models.CASCADE)
+    activation_key = models.UUIDField(default=uuid4, editable=False)
+
