@@ -35,6 +35,12 @@ class ProfileSerializer(serializers.ModelSerializer):
         if Profile.objects.filter(username=attrs['username']).exists():
             raise serializers.ValidationError({'username': 'Username is already in use.'})
         validate_password(attrs['password'])
+        
+        if self.context['request'].method == 'PUT':
+            if attrs.get('email', False):
+                raise serializers.ValidationError({'email': 'Email cannot be changed via this endpoint.'})
+
+
         return attrs
 
 class AccountSerializer(serializers.ModelSerializer):
