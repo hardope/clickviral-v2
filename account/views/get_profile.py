@@ -2,35 +2,30 @@ from rest_framework.views import APIView
 from rest_framework import status
 from ..serializers import ProfileSerializer
 from ..models import Profile
+from ..permissions import IsUserOrReadOnly
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 from django.shortcuts import get_object_or_404
 
 class OneProfile(APIView):
-    """
-    Get One Profile
-    - pk: profile id
 
-    * Update Profile
-    * Delete Profile
-    """
+    permission_classes = [IsAuthenticated, IsUserOrReadOnly]
 
-    permission_classes = [IsAuthenticated]
+    def get_object(self, pk):
+        profile = get_object_or_404(Profile, pk=pk)
+        self.check_object_permissions(self.request, profile)
+        return profile
 
     @swagger_auto_schema(
         operation_description="Get One Profile",
+        operation_summary="Get One Profile",
         responses={
             200: ProfileSerializer,
             403: "Forbidden",
             404: "Not Found",
         },
     )
-
-    def get_object(self, pk):
-        profile = get_object_or_404(Profile, pk=pk)
-        self.check_object_permissions(self.request, profile)
-        return profile
     
     def get(self, request, pk):
         profile = self.get_object(pk)
@@ -39,6 +34,7 @@ class OneProfile(APIView):
     
     @swagger_auto_schema(
         operation_description="Update Profile",
+        operation_summary="Update Profile",
         request_body=ProfileSerializer,
         responses={
             200: ProfileSerializer,
@@ -62,6 +58,7 @@ class OneProfile(APIView):
     
     @swagger_auto_schema(
         operation_description="Delete Profile",
+        operation_summary="Delete Profile",
         responses={
             204: "No Content",
             403: "Forbidden",
