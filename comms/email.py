@@ -61,7 +61,7 @@ class Email:
         <body>
             <p>Hi, {Profile}<br>
             Thanks for signing up to ClickViral! Please click the link below to verify your email address.<br><br>
-            https://{self.domain}/account/verify/{id}/{code}<br>
+            https://{self.domain}/verify/account/{id}/{code}<br>
             </p>
         </body>
         </html>
