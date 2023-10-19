@@ -1,4 +1,4 @@
-from .models import Profile, Account, Preferences
+from .models import Profile, Account, Preferences, Image
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
 from comms import Email
@@ -44,6 +44,9 @@ class ProfileSerializer(serializers.ModelSerializer):
     
     def validate(self, attrs):
 
+        if self.context['request'].user.is_authenticated:
+            raise serializers.ValidationError({'error': 'You are already logged in.'})
+
         if not (attrs.get('email')):
             raise serializers.ValidationError({'email': 'provide a valid email address'})
         if Profile.objects.filter(email=attrs['email']).exists():
@@ -69,3 +72,15 @@ class PreferencesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Preferences
         fields = '__all__'
+
+class ImageSerializer(serializers.ModelSerializer):
+    
+        class Meta:
+            model = Image
+            fields = '__all__'
+
+        def create(self, validated_data):
+            image = Image.objects.create(**validated_data)
+            image.user = self.context['request'].user
+            image.save()
+            return image
