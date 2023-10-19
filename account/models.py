@@ -2,6 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 from uuid import uuid4
 
+def profile_image_path(instance, filename):
+    return f'media/profile/{instance.user.username}/{filename}'
+
 class Profile(User):
 
     bio = models.TextField(max_length=200, blank=True)
@@ -48,3 +51,14 @@ class Preferences(models.Model):
 
     def __str__(self):
         return self.user.username
+
+class Image(models.Model):
+
+    type = (
+        ('profile', 'Profile'),
+        ('cover', 'Cover')
+    )
+
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to=profile_image_path)
+    image_type = models.CharField(max_length=10, choices=type, default='profile')
