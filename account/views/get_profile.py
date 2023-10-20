@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework import status
-from ..serializers import ProfileSerializer
-from ..models import Profile
+from ..serializers import ProfileSerializer, ImageSerializer
+from ..models import Profile, Image
 from ..permissions import IsUserOrReadOnly
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -28,10 +28,13 @@ class OneProfile(APIView):
     )
     
     def get(self, request, pk):
-        profile = self.get_object(pk)
+        profile = self.get_object(pk)   
         serializer = ProfileSerializer(profile, context={'request': request})
-        return Response(serializer.data)
-    
+        data = serializer.data
+        images = Image.objects.filter(user_id=pk)
+        data["images"] = ImageSerializer(images, many=True).data
+        return Response(data)
+
     @swagger_auto_schema(
         operation_description="Update Profile",
         operation_summary="Update Profile",
