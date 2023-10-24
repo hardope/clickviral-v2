@@ -23,7 +23,9 @@ def decode(token):
     # Decode the token
     decoded = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
 
-    if decoded['exp'] < datetime.utcnow():
+    exp = datetime.fromtimestamp(decoded['exp'])
+
+    if exp < datetime.utcnow():
         raise Exception('Token has expired')
 
     # Return the data
