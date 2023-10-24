@@ -82,8 +82,10 @@ class Email:
         <body>
             <p>Hi, {self.username}<br>
             Please click the link below to reset your email address.<br><br>
-            https://{self.domain}/verify/email/{code}<br>
+            https://{self.domain}/verify/email/{code}
             </p>
+            <p>This link will expire in 24 hours.</p>
+
             <p>If you did not request an email reset, please ignore this email.</p>
         </body>
         </html>
@@ -101,6 +103,8 @@ class Email:
             Please click the link below to reset your password.<br><br>
             https://{self.domain}/verify/password/{code}<br>
             </p>
+            <p>This link will expire in 24 hours.</p>
+
             <p>If you did not request a password reset, please ignore this email.</p>
         </body>
         </html>
