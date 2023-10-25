@@ -55,14 +55,14 @@ class Email:
     def send_text(self):
         send_email(self.subject, self.body, self.to)
 
-    def send_sign_up(self, code, id):
+    def send_sign_up(self, code):
         self.subject = "Welcome to ClickViral!"
         self.body = f"""
         <html>
         <body>
             <p>Hi, {self.username}<br>
             Thanks for signing up to ClickViral! Please click the link below to verify your email address.<br><br>
-            https://{self.domain}/verify/account/{id}/{code}<br>
+            https://{self.domain}/verify/account//{code}<br>
             </p>
 
             <p>If you did not sign up for ClickViral, please ignore this email.</p>
