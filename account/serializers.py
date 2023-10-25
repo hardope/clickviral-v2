@@ -1,7 +1,8 @@
-from .models import Profile, Account, Preferences, Image
+from .models import Profile, Preferences, Image
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
 from comms import Email
+from utils import encode
 
 class ProfileSerializer(serializers.ModelSerializer):
 
@@ -31,13 +32,13 @@ class ProfileSerializer(serializers.ModelSerializer):
         user.is_staff = False
         user.is_superuser = False
 
-        account = Account.objects.create(user=user)
         preferences = Preferences.objects.create(user=user)
 
         domain = self.context['request'].META['HTTP_HOST']
 
         mail = Email(username=user.username ,to=user.email, domain=domain)
-        mail.send_sign_up(account.activation_key, user.id)
+        token = encode({'user_id': user.id, 'email': user.email})
+        mail.send_sign_up(token)
         user.save()
 
         return user
@@ -70,12 +71,6 @@ class ProfileSerializer(serializers.ModelSerializer):
                     raise serializers.ValidationError({'username': 'Username is already in use.'})
                 
         return attrs
-
-class AccountSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Account
-        fields = '__all__'
 
 class PreferencesSerializer(serializers.ModelSerializer):
 
