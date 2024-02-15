@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && node ./dist/index.js",
-    "test": "tsc && jest"
+    "build": "tsc",
+    "start": "nodemon ./dist/index.js",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
