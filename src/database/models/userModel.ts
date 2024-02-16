@@ -10,8 +10,8 @@ const userSchema = new Schema({
     last_name: { type: String, required: true },
     bio: { type: String, default: '' },
     password: { type: String, required: true },
-    profileImage: { type: String, default: 'default-profile-image.jpg' }, // Default profile image
-    coverImage: { type: String, default: 'default-cover-image.jpg' },     // Default cover image
+    profileImage: { type: String, default: '' },
+    coverImage: { type: String, default: '' },  
     date_joined: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now },
     last_login: { type: Date, default: Date.now }
@@ -42,6 +42,9 @@ userSchema.methods.comparePassword = async function(candidatePassword: string) {
 userSchema.methods.toJSON = function() {
     const userObject = this.toObject();
     delete userObject.password;
+    delete userObject.__v;
+    userObject.id = userObject._id;
+    delete userObject._id;
     return userObject;
 }
 
