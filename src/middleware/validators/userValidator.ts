@@ -15,4 +15,14 @@ export const userValidator = {
         email: Joi.string().email().required(),
         password: Joi.string().min(6).required(),
     }),
+    update: Joi.object({
+        email: Joi.forbidden(),
+        password: Joi.forbidden(),
+        username: Joi.forbidden(),
+        first_name: Joi.string().min(3),
+        last_name: Joi.string().min(3),
+        bio: Joi.string().min(3),
+        profileImage: Joi.binary(),
+        coverImage: Joi.binary(),
+    }),
 };
