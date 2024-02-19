@@ -112,7 +112,14 @@ const deleteUser = () => {
 const searchUser = () => {
     return async (req: Request, res: Response) => {
         try {
-            const users = await User.find({ $text: { $search: req.query.q as string } });
+            const users = await User.find({
+                $or: [
+                    { first_name: { $regex: req.query.q, $options: 'i' } },
+                    { last_name: { $regex: req.query.q, $options: 'i' } },
+                    { username: { $regex: req.query.q, $options: 'i' } },
+                ]
+            });
+
             if (users.length === 0) {
                 // If no user found, send a 404 Not Found status
                 res.status(404).send({
@@ -128,6 +135,7 @@ const searchUser = () => {
                 });
             }
         } catch (error) {
+            console.log(error);
             res.status(500).send({
                 "message": "An error occurred while retrieving users",
                 "status": "error"

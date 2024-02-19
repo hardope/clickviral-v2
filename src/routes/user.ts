@@ -7,6 +7,7 @@ const UserRouter = Router();
 
 UserRouter.get('/', userController.getUsers());
 UserRouter.post('/create', validateSchema(userValidator.register), userController.createUser());
+UserRouter.get('/search', userController.searchUser());
 UserRouter.get('/:id', userController.getUser());
 UserRouter.put('/:id', validateSchema(userValidator.update), userController.updateUser());
 UserRouter.delete('/:id', userController.deleteUser());

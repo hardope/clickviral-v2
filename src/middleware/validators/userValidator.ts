@@ -24,5 +24,6 @@ export const userValidator = {
         bio: Joi.string().min(3),
         profileImage: Joi.binary(),
         coverImage: Joi.binary(),
+        profile_type: Joi.string().valid('public', 'private'),
     }),
 };
