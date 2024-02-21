@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
-// import User from '../database/models/userModel';
+import isUserorReadonly from './permissions/user';
+import isAdmin from './permissions/admin';
 
 const authorization = () => {
     return async (req: Request, res: Response, next: NextFunction) => {
@@ -34,4 +35,4 @@ const authorization = () => {
     }
 }
 
-export { authorization };
+export { authorization, isUserorReadonly, isAdmin };
