@@ -18,7 +18,7 @@ const login = () => {
             } else {
                 const isMatch = await bcrypt.compare(password, user.password);
                 if (isMatch) {
-                    const token = jwt.sign({ id: user._id }, 'secret', { expiresIn: 3600 });
+                    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET!, { expiresIn: '1h' });
                     res.status(200).send({
                         "data": {
                             "token": token

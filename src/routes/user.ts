@@ -3,10 +3,11 @@ import * as userController from '../controller/user';
 import * as AuthController from '../controller/auth';
 import { userValidator } from '../middleware/validators/userValidator';
 import { validateSchema } from '../middleware/validators/validator';
+import { authorization } from '../middleware/authorization';
 
 const UserRouter = Router();
 
-UserRouter.get('/', userController.getUsers());
+UserRouter.get('/', authorization(), userController.getUsers());
 UserRouter.post('/create', validateSchema(userValidator.register), userController.createUser());
 UserRouter.get('/search', userController.searchUser());
 UserRouter.get('/:id', userController.getUser());
