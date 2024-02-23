@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 import isUserorReadonly from './permissions/user';
 import isAdmin from './permissions/admin';
+import User from '../database/models/userModel';
 
 const authorization = () => {
     return async (req: Request, res: Response, next: NextFunction) => {
@@ -21,10 +22,20 @@ const authorization = () => {
                     "status": "bad_request"
                 });
             }
-            const decoded = jwt.verify(token, process.env.JWT_SECRET!);
-            req.body.user = decoded;
+            const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { id: string };
+            var user = await User.findById(decoded.id);
+            if (!user) {
+                return res.status(404).send({
+                    "message": "User not found",
+                    "status": "not_found"
+                });
+            }
+            
+            req.body.user = user;
+
             next();
         } catch (error) {
+            console.log(error);
             res.status(400).send({
                 "message": "Invalid token",
                 "status": "bad_request"
