@@ -34,8 +34,15 @@ const authorization = () => {
             req.body.user = user;
 
             next();
-        } catch (error) {
-            console.log(error);
+        } catch (error: any) {
+            
+            if (error.name === 'TokenExpiredError') {
+                return res.status(401).send({
+                    "message": "Token expired",
+                    "status": "unauthorized"
+                });
+            }
+
             res.status(400).send({
                 "message": "Invalid token",
                 "status": "bad_request"

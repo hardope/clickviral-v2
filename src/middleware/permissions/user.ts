@@ -3,12 +3,29 @@ import User from '../../database/models/userModel';
 
 const isUserorReadonly = () => {
     return async (req: Request, res: Response, next: NextFunction) => {
-        const user = req.body.user.id;
-        const user_id = req.params.id;
-        try {
-            const userObj = await User.findOne({ _id: user });
 
-            if (userObj && (userObj.is_admin || userObj._id.toString() === user_id)) {
+        try {
+
+            const userObj = await User.findOne({ _id: req.body.user.id });
+            var finduser = await User.findOne({ _id: req.params.id });
+
+            if (!userObj) {
+                res.status(404).send({
+                    "message": "User not found",
+                    "status": "not_found"
+                });
+                return;
+            }
+
+            if (!finduser) {
+                res.status(404).send({
+                    "message": "User not found",
+                    "status": "not_found"
+                });
+                return;
+            }
+
+            if (userObj && (userObj.is_admin || userObj.id === finduser.id)) {
                 next();
             } else {
                 res.status(403).send({
@@ -19,6 +36,7 @@ const isUserorReadonly = () => {
         }
 
         catch (error) {
+            console.log(error);
             res.status(500).send({
                 "message": "An error occurred while checking user permissions",
                 "status": "error"

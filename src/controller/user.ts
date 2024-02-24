@@ -35,20 +35,12 @@ const getUser = () => {
     return async (req: Request, res: Response) => {
         try {
             const user = await User.findById(req.params.id);
-            if (!user) {
-                // If no user found, send a 404 Not Found status
-                res.status(404).send({
-                    "message": "User not found",
-                    "status": "not_found"
-                });
-            } else {
                 // If user found, send it as response
-                res.status(200).send({
-                    "data": user,
-                    "message": "User retrieved successfully",
-                    "status": "success"
-                });
-            }
+            res.status(200).send({
+                "data": user,
+                "message": "User retrieved successfully",
+                "status": "success"
+            });
         } catch (error) {
             res.status(500).send({
                 "message": "An error occurred while retrieving user",
@@ -61,15 +53,7 @@ const getUser = () => {
 const updateUser = () => {
     return async (req: Request, res: Response) => {
         try {
-            const user = await User.findByIdAndUpdate
-                (req.params.id, req.body, { new: true });
-            if (!user) {
-                // If no user found, send a 404 Not Found status
-                res.status(404).send({
-                    "message": "User not found",
-                    "status": "not_found"
-                });
-            }
+            const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
             // If user found, send it as response
             res.status(200).send({
                 "data": user,
@@ -89,15 +73,8 @@ const updateUser = () => {
 const deleteUser = () => {
     return async (req: Request, res: Response) => {
         try {
-            const user = await User.findByIdAndDelete(req.params.id);
-            if (!user) {
-                // If no user found, send a 404 Not Found status
-                res.status(404).send({
-                    "message": "User not found",
-                    "status": "not_found"
-                });
-            }
-            // If user found, send a 204 No Content status
+            await User.findByIdAndDelete(req.params.id);
+
             res.status(204).send();
         }
         catch (error) {
