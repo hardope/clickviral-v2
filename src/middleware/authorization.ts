@@ -26,12 +26,14 @@ const authorization = () => {
             var user = await User.findById(decoded.id);
             if (!user) {
                 return res.status(404).send({
-                    "message": "User not found",
+                    "message": "Invalid AUthenticatd User",
                     "status": "not_found"
                 });
             }
             
             req.body.user = user;
+            user.last_seen = new Date();
+            await user.save();
 
             next();
         } catch (error: any) {

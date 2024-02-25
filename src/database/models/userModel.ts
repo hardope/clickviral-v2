@@ -15,6 +15,7 @@ const userSchema = new Schema({
     date_joined: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now },
     last_login: { type: Date, null: true, default: null},
+    last_seen: { type: Date, null: true, default: null},
     is_active: { type: Boolean, default: false },
     is_admin: { type: Boolean, default: false },
     profile_type: { type: String, default: 'public' },

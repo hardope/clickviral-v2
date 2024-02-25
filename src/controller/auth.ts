@@ -10,6 +10,7 @@ const login = () => {
                 email = req.body.email,
                 password = req.body.password;
             const user = await User.findOne({ email });
+
             if (!user) {
                 res.status(404).send({
                     "message": "User not found",
@@ -17,8 +18,18 @@ const login = () => {
                 });
             } else {
                 const isMatch = await bcrypt.compare(password, user.password);
+
+                if (user.is_active === false) {
+                    res.status(401).send({
+                        "message": "Account Not Activated",
+                        "status": "unauthorized"
+                    });
+                }
+
                 if (isMatch) {
                     const token = jwt.sign({id: user._id}, process.env.JWT_SECRET!, { expiresIn: '1h' });
+                    user.last_login = new Date();
+                    await user.save();
                     res.status(200).send({
                         "data": {
                             "token": token,

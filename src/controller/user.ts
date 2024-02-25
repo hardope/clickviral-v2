@@ -112,7 +112,6 @@ const searchUser = () => {
                 });
             }
         } catch (error) {
-            console.log(error);
             res.status(500).send({
                 "message": "An error occurred while retrieving users",
                 "status": "error"
@@ -148,4 +147,4 @@ const createUser = () => {
     }
 }
 
-export { getUsers, createUser, getUser, updateUser, deleteUser, searchUser};
+export { getUsers, createUser, getUser, updateUser, deleteUser, searchUser };

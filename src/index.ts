@@ -3,6 +3,8 @@ import router from './routes/index';
 import connectDB from './database/connect';
 import bodyParser from 'body-parser';
 import logger from './middleware/logger';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 connectDB();
@@ -16,6 +18,6 @@ app.get('/', (_req, res) => {
 
 app.use('/api', router);
 
-app.listen(3000, () => {
-    console.log('Server is running on port 3000');
+app.listen(process.env.PORT, () => {
+    console.log(`Server is running on port ${process.env.PORT}`);
 });
