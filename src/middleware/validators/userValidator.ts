@@ -37,4 +37,7 @@ export const userValidator = {
         profileImage: Joi.binary(),
         coverImage: Joi.binary(),
     }),
+    verify: Joi.object({
+        otp: Joi.string().required(),
+    }),
 };

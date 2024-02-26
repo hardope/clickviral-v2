@@ -151,4 +151,40 @@ const createUser = () => {
     }
 }
 
-export { getUsers, createUser, getUser, updateUser, deleteUser, searchUser };
+const verifyUser = () => {
+    return async (req: Request, res: Response) => {
+        try {
+
+            const otp = await Otp.find({ user_id: req.params.id, purpose: 'register' });
+
+            if (otp[0].otp === req.body.otp) {
+
+                if (otp[0].created_at < new Date(new Date().getTime() - 15 * 60000)) {
+                    res.status(400).send({
+                        "message": "OTP expired",
+                        "status": "error"
+                    });
+                    return;
+                }
+
+                await User.findByIdAndUpdate(req.params.id, { is_active: true });
+                res.status(200).send({
+                    "message": "User verified successfully",
+                    "status": "success"
+                });
+            } else {
+                res.status(400).send({
+                    "message": "Invalid OTP",
+                    "status": "error"
+                });
+            }
+        } catch (error) {
+            res.status(500).send({
+                "message": "An error occurred while verifying user",
+                "status": "error"
+            });
+        }
+    }
+}
+
+export { getUsers, createUser, getUser, updateUser, deleteUser, searchUser, verifyUser };

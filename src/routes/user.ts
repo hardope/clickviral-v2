@@ -18,6 +18,7 @@ UserRouter.get('/search', authorization(), userController.searchUser());
 UserRouter.get('/:id', [authorization(), isUserorReadonly()], userController.getUser());
 UserRouter.put('/:id', [authorization(), isUserorReadonly()], validateSchema(userValidator.update), userController.updateUser());
 UserRouter.delete('/:id', [authorization(), isUserorReadonly()], userController.deleteUser());
+UserRouter.post('/verify/:id', validateSchema(userValidator.verify), userController.verifyUser());
 UserRouter.post('/login', authController.login());
 
 export default UserRouter;
