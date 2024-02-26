@@ -24,25 +24,26 @@ const login = () => {
                         "message": "Account Not Activated",
                         "status": "unauthorized"
                     });
-                }
-
-                if (isMatch) {
-                    const token = jwt.sign({id: user._id}, process.env.JWT_SECRET!, { expiresIn: '1h' });
-                    user.last_login = new Date();
-                    await user.save();
-                    res.status(200).send({
-                        "data": {
-                            "token": token,
-                            "user": user.toJSON()
-                        },
-                        "message": "User logged in successfully",
-                        "status": "success"
-                    });
                 } else {
-                    res.status(401).send({
-                        "message": "Invalid credentials",
-                        "status": "unauthorized"
-                    });
+
+                    if (isMatch) {
+                        const token = jwt.sign({id: user._id}, process.env.JWT_SECRET!, { expiresIn: '1h' });
+                        user.last_login = new Date();
+                        await user.save();
+                        res.status(200).send({
+                            "data": {
+                                "token": token,
+                                "user": user.toJSON()
+                            },
+                            "message": "User logged in successfully",
+                            "status": "success"
+                        });
+                    } else {
+                        res.status(401).send({
+                            "message": "Invalid credentials",
+                            "status": "unauthorized"
+                        });
+                    }
                 }
             }
         } catch (error) {

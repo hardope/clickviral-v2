@@ -8,9 +8,12 @@ import { authorization, isUserorReadonly, isAdmin } from '../middleware/authoriz
 
 const UserRouter = Router();
 
+UserRouter.post('/admin/create', validateSchema(userValidator.CreateAdmin), adminController.CreateAdmin());
+UserRouter.get('/admin/activate/:id', [authorization(), isAdmin()], adminController.activateUser());
+UserRouter.get('/admin/deactivate/:id', [authorization(), isAdmin()], adminController.deactivateUser());
+
 UserRouter.get('/', authorization(), isAdmin(), userController.getUsers());
 UserRouter.post('/create', validateSchema(userValidator.register), userController.createUser());
-UserRouter.post('/create-admin', validateSchema(userValidator.CreateAdmin), adminController.CreateAdmin());
 UserRouter.get('/search', authorization(), userController.searchUser());
 UserRouter.get('/:id', [authorization(), isUserorReadonly()], userController.getUser());
 UserRouter.put('/:id', [authorization(), isUserorReadonly()], validateSchema(userValidator.update), userController.updateUser());

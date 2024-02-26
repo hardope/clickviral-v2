@@ -106,7 +106,7 @@ const searchUser = () => {
             } else {
                 // If user found, send it as response
                 res.status(200).send({
-                    "data": users,
+                    "data": users.map(user => user.toJSON()),
                     "message": "Users retrieved successfully",
                     "status": "success"
                 });

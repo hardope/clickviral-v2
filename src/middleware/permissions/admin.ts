@@ -9,6 +9,19 @@ const isAdmin = () => {
             const userObj = await User.findOne({ _id: user });
 
             if (userObj && userObj.is_admin) {
+
+                if (req.params.id) {
+                    const user = await User.findOne({ _id: req.params.id });
+
+                    if (!user) {
+                        res.status(404).send({
+                            "message": "User not found",
+                            "status": "not_found"
+                        });
+                        return;
+                    }
+                }
+
                 next();
             } else {
                 res.status(403).send({

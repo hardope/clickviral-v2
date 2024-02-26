@@ -3,7 +3,6 @@ import User from "../database/models/userModel";
 import dotenv from "dotenv";
 dotenv.config();
 
-
 const CreateAdmin = () => {
     return async (req: Request, res: Response) => {
         try {
@@ -43,4 +42,42 @@ const CreateAdmin = () => {
     }
 }
 
-export { CreateAdmin};
+const activateUser = () => {
+    return async (req: Request, res: Response) => {
+        try {
+            const user = await User.findByIdAndUpdate(req.params.id, { is_active: true }, { new: true });
+
+            res.status(200).send({
+                "data": user,
+                "message": "User activated successfully",
+                "status": "success"
+            });
+        } catch (error) {
+            res.status(500).send({
+                "message": "An error occurred while activating user",
+                "status": "error"
+            });
+        }
+    }
+}
+
+const deactivateUser = () => {
+    return async (req: Request, res: Response) => {
+        try {
+            const user = await User.findByIdAndUpdate(req.params.id, { is_active: false }, { new: true });
+
+            res.status(200).send({
+                "data": user,
+                "message": "User deactivated successfully",
+                "status": "success"
+            });
+        } catch (error) {
+            res.status(500).send({
+                "message": "An error occurred while deactivating user",
+                "status": "error"
+            });
+        }
+    }
+}
+
+export { CreateAdmin, activateUser, deactivateUser };
