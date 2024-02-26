@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import User from "../database/models/userModel";
+import { ActivateAccount } from "../utils/mail";
+import Otp from "../database/models/otp";
 
 const getUsers = () => {
     return async (_req: Request, res: Response) => {
@@ -125,6 +127,8 @@ const createUser = () => {
         try {
             const user = new User(req.body);
             await user.save();
+            Otp.create({ user_id: user._id, purpose: 'register' });
+            ActivateAccount(user);
             res.status(201).send({
                 "data": user,
                 "message": "User created successfully",
