@@ -187,4 +187,94 @@ const verifyUser = () => {
     }
 }
 
-export { getUsers, createUser, getUser, updateUser, deleteUser, searchUser, verifyUser };
+const sendVerificationMail = () => {
+    return async (req: Request, res: Response) => {
+        try {
+            const user = await User.findById(req.params.id);
+
+            if (!user) {
+                res.status(404).send({
+                    "message": "User not found",
+                    "status": "not_found"
+                });
+                return;
+            }
+
+            await Otp.deleteMany({
+                user_id: req.params.id,
+                purpose: 'register'
+            });
+            await Otp.create({ user_id: req.params.id, purpose: 'register' });
+            ActivateAccount(user);
+            res.status(200).send({
+                "message": "Verification email sent",
+                "status": "success"
+            });
+        } catch (error) {
+            res.status(500).send({
+                "message": "An error occurred while sending verification email",
+                "status": "error"
+            });
+        }
+    }
+}
+
+const findAccount = () => {
+    return async (req: Request, res: Response) => {
+        try {
+            const user = await User.findOne({ email: req.body.email });
+
+            if (!user) {
+                res.status(404).send({
+                    "message": "User not found",
+                    "status": "not_found"
+                });
+                return;
+            }
+
+            res.status(200).send({
+                "data": user._id,
+                "message": "Found Account",
+                "status": "success"
+            });
+        } catch (error) {
+            res.status(500).send({
+                "message": "An error occurred while sending verification email",
+                "status": "error"
+            });
+        }
+    }
+}
+
+const deactivateUser = () => {
+    return async (req: Request, res: Response) => {
+        try {
+            await User.findByIdAndUpdate(req.params.id, { is_active: false });
+
+            res.status(200).send({
+                "message": "User deactivated successfully",
+                "status": "success"
+            });
+
+        } catch (error) {
+
+            res.status(500).send({
+                "message": "An error occurred while deactivating user",
+                "status": "error"
+            });
+        }
+    }
+}
+
+export {
+    getUsers,
+    createUser,
+    getUser,
+    updateUser,
+    deleteUser,
+    searchUser,
+    verifyUser,
+    sendVerificationMail,
+    findAccount,
+    deactivateUser
+};

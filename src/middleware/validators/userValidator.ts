@@ -40,4 +40,7 @@ export const userValidator = {
     verify: Joi.object({
         otp: Joi.string().required(),
     }),
+    findAccount: Joi.object({
+        email: Joi.string().email().required(),
+    }),
 };

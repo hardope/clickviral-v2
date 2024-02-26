@@ -19,6 +19,9 @@ UserRouter.get('/:id', [authorization(), isUserorReadonly()], userController.get
 UserRouter.put('/:id', [authorization(), isUserorReadonly()], validateSchema(userValidator.update), userController.updateUser());
 UserRouter.delete('/:id', [authorization(), isUserorReadonly()], userController.deleteUser());
 UserRouter.post('/verify/:id', validateSchema(userValidator.verify), userController.verifyUser());
+UserRouter.post('/find-account', validateSchema(userValidator.findAccount), userController.findAccount());
+UserRouter.post('/deactivate/:id', [authorization(), isUserorReadonly()], userController.deactivateUser());
+UserRouter.post('/send-verification-email/:id', userController.sendVerificationMail());
 UserRouter.post('/login', authController.login());
 
 export default UserRouter;
