@@ -44,10 +44,29 @@ const ActivateAccount = async (user: any): Promise<Boolean> => {
     const text = `Hi ${user.name},\nVerify Your Email Address using this OTP: ${otp.otp}\n\nIf you didn't request this, please ignore this email.\nClickViral Team`;
     const html = `<p>Hi ${user.first_name},</p><p>Verify Your Email Address using this OTP: <strong>${otp.otp}</strong></p><p>If you didn't request this, please ignore this email.</p><p>ClickViral Team</p>`;
 
-    await sendMail(user.email, 'Activate your account', text, html);
+    await sendMail(user.email, 'ClickVial - Activate your account', text, html);
 
     return true;
 
 }
 
-export { sendMail, ActivateAccount };
+const ResetPassword = async (user: any): Promise<Boolean> => {
+
+    var otp;
+
+    otp = await Otp.findOne({ user_id: user._id, purpose: 'forgot_password' });
+
+    if (!otp) {
+        otp = await Otp.create({ user_id: user._id, purpose: 'forgot_password' });
+    }
+
+    const text = `Hi ${user.name},\nReset Your Password using this OTP: ${otp.otp}\n\nIf you didn't request this, please ignore this email.\nClickViral Team`;
+    const html = `<p>Hi ${user.first_name},</p><p>Reset Your Password using this OTP: <strong>${otp.otp}</strong></p><p>If you didn't request this, please ignore this email.</p><p>ClickViral Team</p>`;
+
+    await sendMail(user.email, 'ClickViral - Reset your password', text, html);
+
+    return true;
+
+}
+
+export { sendMail, ActivateAccount, ResetPassword };

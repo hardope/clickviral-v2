@@ -22,6 +22,8 @@ UserRouter.post('/verify/:id', validateSchema(userValidator.verify), userControl
 UserRouter.post('/find-account', validateSchema(userValidator.findAccount), userController.findAccount());
 UserRouter.post('/deactivate/:id', [authorization(), isUserorReadonly()], userController.deactivateUser());
 UserRouter.post('/send-verification-email/:id', userController.sendVerificationMail());
+UserRouter.post('/forgot-password', validateSchema(userValidator.forgotPassword), authController.forgotPassword());
+UserRouter.post('/reset-password', validateSchema(userValidator.resetPassword), authController.resetPassword());
 UserRouter.post('/login', authController.login());
 
 export default UserRouter;
