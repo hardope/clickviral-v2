@@ -22,6 +22,7 @@ const authorization = () => {
                     "status": "bad_request"
                 });
             }
+
             const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { id: string };
             var user = await User.findById(decoded.id);
             if (!user) {
@@ -30,8 +31,9 @@ const authorization = () => {
                     "status": "not_found"
                 });
             }
-            
-            req.body.user = user;
+
+            req.headers.user = JSON.stringify(user);
+
             user.last_seen = new Date();
             await user.save();
 

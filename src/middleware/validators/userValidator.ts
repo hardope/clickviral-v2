@@ -26,7 +26,7 @@ export const userValidator = {
         coverImage: Joi.binary(),
         profile_type: Joi.string().valid('public', 'private'),
     }),
-    CreateAdmin: Joi.object({
+    createAdmin: Joi.object({
         email: Joi.string().email().required(),
         password: Joi.string().min(6).required(),
         username: Joi.string().min(3).required(),
@@ -50,5 +50,13 @@ export const userValidator = {
         email: Joi.string().email().required(),
         otp: Joi.string().required(),
         password: Joi.string().min(6).required(),
+    }),
+    startresetEmail: Joi.object({
+        new_email: Joi.string().email().required(),
+    }),
+    changeEmail: Joi.object({
+        email: Joi.string().email().required(),
+        otp: Joi.string().required(),
+        new_email_otp: Joi.string().required(),
     }),
 };

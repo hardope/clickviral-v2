@@ -5,6 +5,7 @@ const otp = new Schema({
     otp: { type: String, default: (Math.floor(100000 + Math.random() * 900000)) },
     purpose: { type: String, required: true, enum: ['register', 'password_reset', 'forgot_password', 'change_email']},
     created_at: { type: Date, default: Date.now },
+    additional_data: { type: String }
 });
 
 const Otp = mongoose.model('Otp', otp);

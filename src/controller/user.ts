@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import User from "../database/models/userModel";
-import { ActivateAccount } from "../utils/mail";
+import { activateAccount } from "../utils/mail";
 import Otp from "../database/models/otp";
 
 const getUsers = () => {
@@ -128,7 +128,7 @@ const createUser = () => {
             const user = new User(req.body);
             await user.save();
             Otp.create({ user_id: user._id, purpose: 'register' });
-            ActivateAccount(user);
+            activateAccount(user);
             res.status(201).send({
                 "data": user,
                 "message": "User created successfully",
@@ -205,7 +205,7 @@ const sendVerificationMail = () => {
                 purpose: 'register'
             });
             await Otp.create({ user_id: req.params.id, purpose: 'register' });
-            ActivateAccount(user);
+            activateAccount(user);
             res.status(200).send({
                 "message": "Verification email sent",
                 "status": "success"

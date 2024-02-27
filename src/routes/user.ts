@@ -8,7 +8,7 @@ import { authorization, isUserorReadonly, isAdmin } from '../middleware/authoriz
 
 const UserRouter = Router();
 
-UserRouter.post('/admin/create', validateSchema(userValidator.CreateAdmin), adminController.CreateAdmin());
+UserRouter.post('/admin/create', validateSchema(userValidator.createAdmin), adminController.CreateAdmin());
 UserRouter.get('/admin/activate/:id', [authorization(), isAdmin()], adminController.activateUser());
 UserRouter.get('/admin/deactivate/:id', [authorization(), isAdmin()], adminController.deactivateUser());
 
@@ -22,8 +22,10 @@ UserRouter.post('/verify/:id', validateSchema(userValidator.verify), userControl
 UserRouter.post('/find-account', validateSchema(userValidator.findAccount), userController.findAccount());
 UserRouter.post('/deactivate/:id', [authorization(), isUserorReadonly()], userController.deactivateUser());
 UserRouter.post('/send-verification-email/:id', userController.sendVerificationMail());
-UserRouter.post('/forgot-password', validateSchema(userValidator.forgotPassword), authController.forgotPassword());
+UserRouter.post('/send-reset-password-otp', validateSchema(userValidator.forgotPassword), authController.forgotPassword());
 UserRouter.post('/reset-password', validateSchema(userValidator.resetPassword), authController.resetPassword());
+UserRouter.post('/send-change-email-otp', [authorization()], validateSchema(userValidator.startresetEmail), authController.startResetEmail());
+UserRouter.post('/change-email', [authorization()], validateSchema(userValidator.changeEmail), authController.changeEmail());
 UserRouter.post('/login', authController.login());
 
 export default UserRouter;
