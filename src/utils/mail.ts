@@ -60,7 +60,7 @@ const resetPassword = async (user: any): Promise<Boolean> => {
         otp = await Otp.create({ user_id: user.id, purpose: 'forgot_password' });
     }
 
-    const text = `Hi ${user.name},\nReset Your Password using this OTP: ${otp.otp}\n\nIf you didn't request this, please ignore this email.\nClickViral Team`;
+    const text = `Hi ${user.first_name},\nReset Your Password using this OTP: ${otp.otp}\n\nIf you didn't request this, please ignore this email.\nClickViral Team`;
     const html = `<p>Hi ${user.first_name},</p><p>Reset Your Password using this OTP: <strong>${otp.otp}</strong></p><p>If you didn't request this, please ignore this email.</p><p>ClickViral Team</p>`;
 
     await sendMail(user.email, 'ClickViral - Reset your password', text, html);
@@ -77,7 +77,7 @@ const resetEmail = async (user: any, newEmail: string): Promise<Boolean> => {
     
     otp = await Otp.create({ user_id: user.id, purpose: 'change_email', additional_data: JSON.stringify({ new_email: newEmail, new_email_otp: (Math.floor(100000 + Math.random() * 900000)) }) });
 
-    var oldEMailText = `Hi ${user.name},\nUse This OTP to verify your old email address: ${otp.otp}\n\nIf you didn't request this, please ignore this email.\nClickViral Team`;
+    var oldEMailText = `Hi ${user.first_name},\nUse This OTP to verify your old email address: ${otp.otp}\n\nIf you didn't request this, please ignore this email.\nClickViral Team`;
     var oldEmailHtml = `<p>Hi ${user.first_name},</p><p>Use This OTP to verify your old email address: <strong>${otp.otp}</strong></p><p>If you didn't request this, please ignore this email.</p><p>ClickViral Team</p>`;
 
     await sendMail(user.email, 'ClickVial - Verify your old email address', oldEMailText, oldEmailHtml);
