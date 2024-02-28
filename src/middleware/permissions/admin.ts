@@ -3,7 +3,7 @@ import User from '../../database/models/userModel';
 
 const isAdmin = () => {
     return async (req: Request, res: Response, next: NextFunction) => {
-        const user = req.body.user.id;
+        const user = JSON.parse(req.headers.user as string).id;
 
         try {
             const userObj = await User.findOne({ _id: user });

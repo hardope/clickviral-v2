@@ -6,7 +6,7 @@ const isUserorReadonly = () => {
 
         try {
 
-            const userObj = await User.findOne({ _id: req.body.user.id });
+            const userObj = await User.findOne({ _id: JSON.parse(req.headers.user as string).id });
             var finduser = await User.findOne({ _id: req.params.id });
 
             if (!userObj) {
