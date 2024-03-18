@@ -27,5 +27,6 @@ UserRouter.post('/reset-password', validateSchema(userValidator.resetPassword), 
 UserRouter.post('/send-change-email-otp', [authorization()], validateSchema(userValidator.startresetEmail), authController.startResetEmail());
 UserRouter.post('/change-email', [authorization()], validateSchema(userValidator.changeEmail), authController.changeEmail());
 UserRouter.post('/login', authController.login());
+UserRouter.post('/upload-image', authorization(), userController.uploadImage());
 
 export default UserRouter;

@@ -2,6 +2,11 @@ import { Request, Response } from "express";
 import User from "../database/models/userModel";
 import { activateAccount } from "../utils/mail";
 import Otp from "../database/models/otp";
+import path from 'path';
+import { v4 as uuidv4 } from 'uuid';
+import fs from 'fs';
+
+declare const __dirname: string;
 
 const getUsers = () => {
     return async (_req: Request, res: Response) => {
@@ -266,6 +271,83 @@ const deactivateUser = () => {
     }
 }
 
+const uploadImage = () => {
+
+    interface UploadedImage {
+        name: string;
+        data: Buffer;
+        size: number;
+        encoding: string;
+        tempFilePath: string;
+        truncated: boolean;
+        mimetype: string;
+        md5: string;
+        mv: (path: string, callback: (err: any) => void) => void; // Assuming this is the type of the 'mv' function
+    }
+
+    return async (req: Request, res: Response) => {
+
+        try {
+
+            let user = JSON.parse(req.headers.user as string);
+
+            if (!req.files || !req.files.image) {
+                res.status(400).send({
+                    "message": "No image found",
+                    "status": "error"
+                });
+                return;
+            }
+
+            if (!req.body.image_type) {
+                res.status(400).send({
+                    "message": "Image type not found",
+                    "status": "error"
+                });
+                return;
+            }
+
+            const file = req.files.image as UploadedImage;
+            const extension = file.name.split('.').pop();
+            const fileName = `${uuidv4()}.${extension}`;
+
+            if (file.mimetype !== 'image/jpeg' && file.mimetype !== 'image/png' && file.mimetype !== 'image/jpg') {
+                res.status(400).send({
+                    "message": "Invalid file type",
+                    "status": "error"
+                });
+                return;
+            }
+
+            const uploadPath = path.join(__dirname, `../../static/${user.id}/${req.body.image_type}/${fileName}`);
+
+            fs.mkdirSync(path.join(__dirname, `../../static/${user.id}/${req.body.image_type}`), { recursive: true });
+
+            file.mv(uploadPath, (err) => {
+                if (err) {
+                    console.error("Error uploading image:", err);
+                    res.status(500).send({
+                        "message": "An error occurred while uploading image",
+                        "status": "error"
+                    });
+                    return;
+                }
+            });
+
+            res.status(200).send({
+                "message": "Image uploaded successfully",
+                "status": "success"
+            });
+        } catch (err) {
+            console.error("Error uploading image:", err);
+            res.status(500).send({
+                "message": "An error occurred while uploading image",
+                "status": "error"
+            });
+        }
+    }
+}
+
 export {
     getUsers,
     createUser,
@@ -276,5 +358,6 @@ export {
     verifyUser,
     sendVerificationMail,
     findAccount,
-    deactivateUser
+    deactivateUser,
+    uploadImage,
 };
