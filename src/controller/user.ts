@@ -307,6 +307,14 @@ const uploadImage = () => {
                 return;
             }
 
+            if (req.body.image_type !== 'profile' && req.body.image_type !== 'cover') {
+                res.status(400).send({
+                    "message": "Invalid image type",
+                    "status": "error"
+                });
+                return;
+            }
+
             const file = req.files.image as UploadedImage;
             const extension = file.name.split('.').pop();
             const fileName = `${uuidv4()}.${extension}`;
