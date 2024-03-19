@@ -289,7 +289,15 @@ const uploadImage = () => {
 
         try {
 
-            let user = JSON.parse(req.headers.user as string);
+            const user: any = await User.findById(JSON.parse(req.headers.user as string).id);
+
+            if (!user) {
+                res.status(404).send({
+                    "message": "User not found",
+                    "status": "error"
+                });
+                return;
+            }
 
             if (!req.files || !req.files.image) {
                 res.status(400).send({
@@ -315,6 +323,13 @@ const uploadImage = () => {
                 return;
             }
 
+            let type: { [key: string]: string } = {
+                'profile': 'profileImage',
+                'cover': 'coverImage'
+            }
+
+            req.body.image_type = type[req.body.image_type]
+
             const file = req.files.image as UploadedImage;
             const extension = file.name.split('.').pop();
             const fileName = `${uuidv4()}.${extension}`;
@@ -327,9 +342,12 @@ const uploadImage = () => {
                 return;
             }
 
-            const uploadPath = path.join(__dirname, `../../static/${user.id}/${req.body.image_type}/${fileName}`);
+            user[req.body.image_type] = `/assets/${user.id}/${fileName}`;
+            await user.save();
 
-            fs.mkdirSync(path.join(__dirname, `../../static/${user.id}/${req.body.image_type}`), { recursive: true });
+            const uploadPath = path.join(__dirname, `../../assets/${user.id}/${fileName}`);
+
+            fs.mkdirSync(path.join(__dirname, `../../assets/${user.id}`), { recursive: true });
 
             file.mv(uploadPath, (err) => {
                 if (err) {
