@@ -4,7 +4,6 @@ import { activateAccount } from "../utils/mail";
 import Otp from "../database/models/otp";
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import fs from 'fs';
 
 declare const __dirname: string;
 
@@ -342,12 +341,11 @@ const uploadImage = () => {
                 return;
             }
 
-            user[req.body.image_type] = `/assets/${user.id}/${fileName}`;
+            user[req.body.image_type] = `/assets/${fileName}`;
+            let image_type = req.body.image_type;
             await user.save();
 
-            const uploadPath = path.join(__dirname, `../../assets/${user.id}/${fileName}`);
-
-            fs.mkdirSync(path.join(__dirname, `../../assets/${user.id}`), { recursive: true });
+            const uploadPath = path.join(__dirname, `../../assets/${user.id}-${image_type.substring(0, 1)}-${fileName}`);
 
             file.mv(uploadPath, (err) => {
                 if (err) {

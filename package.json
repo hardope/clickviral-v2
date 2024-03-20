@@ -5,6 +5,7 @@
     "main": "index.js",
     "scripts": {
         "build": "tsc",
+        "stage": "mkdir assets",
         "start": "nodemon ./dist/index.js",
         "test": "jest"
     },
