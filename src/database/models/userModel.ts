@@ -1,7 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
+import { PASSWORD_SALT_ROUNDS } from '../../utils/environment';
 import bcrypt from 'bcrypt';
-
-const SALT_ROUNDS = 10;
 
 const userSchema = new Schema({
     username: { type: String, required: true, unique: true},
@@ -31,7 +30,7 @@ userSchema.pre('save', async function(next) {
         return next();
     }
     try {
-        const hashedPassword = await bcrypt.hash(this.password, SALT_ROUNDS);
+        const hashedPassword = await bcrypt.hash(this.password, PASSWORD_SALT_ROUNDS);
         this.password = hashedPassword;
         next();
     } catch (error) {
@@ -58,4 +57,16 @@ userSchema.methods.toJSON = function() {
 
 const User = mongoose.model('User', userSchema);
 
-export default User;
+const image_types = ['profile', 'cover'];
+
+const userImageSchema = new Schema({
+    user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    image_type: { type: String, enum: image_types, required: true },
+    image_url: { type: String, required: true },
+    created_at: { type: Date, default: Date.now },
+    updated_at: { type: Date, default: Date.now },
+});
+
+const UserImage = mongoose.model('UserImage', userImageSchema);
+
+export { User, UserImage };

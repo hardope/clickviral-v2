@@ -1,27 +1,21 @@
 import nodemailer, { SentMessageInfo } from 'nodemailer';
-import { config } from 'dotenv';
+import { SMTP_USER, SMTP_HOST, SMTP_PORT , SMTP_PASSWORD  } from './environment';
 import Otp from '../database/models/otp';
 
-config();
-
-if (!process.env.SMTP_HOST || !process.env.SMTP_PORT || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
-    throw new Error('SMTP configuration is missing');
-}
-
 const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: parseInt(process.env.SMTP_PORT),
+    host: SMTP_HOST,
+    port: parseInt(SMTP_PORT),
     secure: true,
     auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS
+        user: SMTP_USER,
+        pass: SMTP_PASSWORD
     }
 })
 
 const sendMail = async (to: string, subject: string, text: string, html: string): Promise<SentMessageInfo> => {
 
     var mailOptions = {
-        from: process.env.SMTP_USER,
+        from: SMTP_USER,
         to: to,
         subject: subject,
         text: text,

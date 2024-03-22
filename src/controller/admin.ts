@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-import User from "../database/models/userModel";
-import dotenv from "dotenv";
-dotenv.config();
+import { User } from "../database/models/userModel";
+import { ADMIN_ACCESS_CODES } from "../utils/environment";
 
 const CreateAdmin = () => {
     return async (req: Request, res: Response) => {
@@ -9,7 +8,7 @@ const CreateAdmin = () => {
 
             var admin_code = req.body.admin_code;
 
-            if (!process.env.ADMIN_CODES || !process.env.ADMIN_CODES.includes(admin_code)) {
+            if (ADMIN_ACCESS_CODES.includes(admin_code)) {
                 res.status(401).send({
                     "message": "Invalid admin code",
                     "status": "unauthorized"

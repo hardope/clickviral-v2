@@ -1,9 +1,10 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { Request, Response } from 'express';
-import User from '../database/models/userModel';
+import { User } from "../database/models/userModel";
 import * as mail from '../utils/mail';
 import Otp from '../database/models/otp';
+import { JWT_ACCESS_LIFETIME } from '../utils/environment';
 
 const login = () => {
     return async (req: Request, res: Response) => {
@@ -29,7 +30,7 @@ const login = () => {
                 } else {
 
                     if (isMatch) {
-                        const token = jwt.sign({id: user._id}, process.env.JWT_SECRET!, { expiresIn: '1h' });
+                        const token = jwt.sign({id: user._id}, process.env.JWT_SECRET!, {expiresIn: JWT_ACCESS_LIFETIME});
                         user.last_login = new Date();
                         await user.save();
                         res.status(200).send({

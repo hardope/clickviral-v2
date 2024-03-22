@@ -3,10 +3,8 @@ import router from './routes/index';
 import connectDB from './database/connect';
 import bodyParser from 'body-parser';
 import logger from './middleware/logger';
-import dotenv from 'dotenv';
+import { PORT } from './utils/environment';
 import fileUpload from 'express-fileupload';
-
-dotenv.config();
 
 const app = express();
 connectDB();
@@ -29,6 +27,6 @@ app.post('/upload', (req, res) => {
 
 app.use('/api', router);
 
-app.listen(process.env.PORT, () => {
-    console.log(`Server is running on port ${process.env.PORT}`);
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });

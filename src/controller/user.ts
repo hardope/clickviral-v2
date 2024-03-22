@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import User from "../database/models/userModel";
+import { User } from "../database/models/userModel";
 import { activateAccount } from "../utils/mail";
 import Otp from "../database/models/otp";
 import path from 'path';
