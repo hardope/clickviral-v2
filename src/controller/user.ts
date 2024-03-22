@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
-import { User } from "../database/models/userModel";
+import { User, UserImage } from "../database/models/userModel";
 import { activateAccount } from "../utils/mail";
 import Otp from "../database/models/otp";
 import path from 'path';
-import { v4 as uuidv4 } from 'uuid';
 
 declare const __dirname: string;
 
@@ -270,6 +269,36 @@ const deactivateUser = () => {
     }
 }
 
+const getImages = () => {
+    return async (req: Request, res: Response) => {
+        try {
+            var images = await UserImage.find({ user_id: req.params.id });
+
+            if (images.length === 0) {
+                res.status(404).send({
+                    "message": "No images found",
+                    "status": "not_found"
+                });
+                return;
+            }
+
+            images = images.map(image => image.toJSON());
+
+            res.status(200).send({
+                "data": images,
+                "message": "Images retrieved successfully",
+                "status": "success"
+            });
+
+        } catch (error) {
+            res.status(500).send({
+                "message": "An error occurred while retrieving images",
+                "status": "error"
+            });
+        }
+    }
+}
+
 const uploadImage = () => {
 
     interface UploadedImage {
@@ -329,9 +358,11 @@ const uploadImage = () => {
 
             req.body.image_type = type[req.body.image_type]
 
+            let imageobj = new UserImage({ user_id: user._id, image_type: req.body.image_type, image_url: '' });
+
             const file = req.files.image as UploadedImage;
             const extension = file.name.split('.').pop();
-            const fileName = `${uuidv4()}.${extension}`;
+            const fileName = `${imageobj.id}.${extension}`;
 
             if (file.mimetype !== 'image/jpeg' && file.mimetype !== 'image/png' && file.mimetype !== 'image/jpg') {
                 res.status(400).send({
@@ -342,10 +373,12 @@ const uploadImage = () => {
             }
 
             user[req.body.image_type] = `/assets/${fileName}`;
-            let image_type = req.body.image_type;
+            imageobj.image_url = `/assets/${fileName}`;
+
+            await imageobj.save();
             await user.save();
 
-            const uploadPath = path.join(__dirname, `../../assets/${user.id}-${image_type.substring(0, 1)}-${fileName}`);
+            const uploadPath = path.join(__dirname, `../../assets/${fileName}`);
 
             file.mv(uploadPath, (err) => {
                 if (err) {
@@ -384,4 +417,5 @@ export {
     findAccount,
     deactivateUser,
     uploadImage,
+    getImages
 };

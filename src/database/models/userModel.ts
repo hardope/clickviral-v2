@@ -57,7 +57,7 @@ userSchema.methods.toJSON = function() {
 
 const User = mongoose.model('User', userSchema);
 
-const image_types = ['profile', 'cover'];
+const image_types = ['profileImage', 'coverImage'];
 
 const userImageSchema = new Schema({
     user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
@@ -67,6 +67,14 @@ const userImageSchema = new Schema({
     updated_at: { type: Date, default: Date.now },
 });
 
+userImageSchema.methods.toJSON = function() {
+    const imageObject = this.toObject();
+    delete imageObject.__v;
+    delete imageObject.updated_at;
+    imageObject.id = imageObject._id;
+    delete imageObject._id;
+    return imageObject;
+}
 const UserImage = mongoose.model('UserImage', userImageSchema);
 
 export { User, UserImage };
