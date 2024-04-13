@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { User, UserImage } from "../database/models/userModel";
+import { User, UserImage, securityPreferences } from "../database/models/userModel";
 import { activateAccount } from "../utils/mail";
 import Otp from "../database/models/otp";
 import path from 'path';
@@ -130,8 +130,8 @@ const createUser = () => {
         try {
             const user = new User(req.body);
             await user.save();
-            Otp.create({ user_id: user._id, purpose: 'register' });
             activateAccount(user);
+            securityPreferences.create({ user_id: user._id });
             res.status(201).send({
                 "data": user,
                 "message": "User created successfully",
@@ -203,11 +203,6 @@ const sendVerificationMail = () => {
                 return;
             }
 
-            await Otp.deleteMany({
-                user_id: req.params.id,
-                purpose: 'register'
-            });
-            await Otp.create({ user_id: req.params.id, purpose: 'register' });
             activateAccount(user);
             res.status(200).send({
                 "message": "Verification email sent",

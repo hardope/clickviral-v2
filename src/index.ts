@@ -17,15 +17,7 @@ app.get('/', (_req, res) => {
     res.send('<h1>ClickViral API</h1>');
 });
 
-app.post('/upload', (req, res) => {
-    console.log(req.files)
-    if (req.files === null) {
-        return res.status(400).json({ msg: 'No file uploaded' });
-    }
-    return res.status(200).json({ msg: 'File uploaded successfully' });
-});
-
-app.use('/api', router);
+app.use('/', router);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

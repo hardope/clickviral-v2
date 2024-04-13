@@ -38,6 +38,13 @@ userSchema.pre('save', async function(next) {
     }
 });
 
+userSchema.pre("remove" as any, async function(this: any, next: any) {
+    // Delete all images associated with the user
+    await UserImage.deleteMany({ user_id: this._id });
+    await securityPreferences.deleteMany({ user_id: this._id });
+    next();
+});
+
 userSchema.methods.comparePassword = async function(candidatePassword: string) {
     return bcrypt.compare(candidatePassword, this.password);
 };
@@ -77,4 +84,22 @@ userImageSchema.methods.toJSON = function() {
 }
 const UserImage = mongoose.model('UserImage', userImageSchema);
 
-export { User, UserImage };
+const securityPreferencesSchema = new Schema({
+    user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    two_factor_auth: { type: Boolean, default: false },
+    login_notifications: { type: Boolean, default: true },
+    updated_at: { type: Date, default: Date.now },
+});
+
+securityPreferencesSchema.methods.toJSON = function() {
+    const securityObject = this.toObject();
+    delete securityObject.__v;
+    delete securityObject.updated_at;
+    securityObject.id = securityObject._id;
+    delete securityObject._id;
+    return securityObject;
+}
+
+const securityPreferences = mongoose.model('SecurityPreferences', securityPreferencesSchema);
+
+export { User, UserImage, securityPreferences };

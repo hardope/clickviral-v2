@@ -29,16 +29,13 @@ const activateAccount = async (user: any): Promise<Boolean> => {
 
     var otp;
     
-    otp = await Otp.findOne({ user_id: user._id, purpose: 'register' });
-
-    if (!otp) {
-        otp = await Otp.create({ user_id: user._id, purpose: 'register' });
-    }
+    await Otp.deleteMany({ user_id: user._id, purpose: 'register' });
+    otp = await Otp.create({ user_id: user._id, purpose: 'register' });
 
     const text = `Hi ${user.name},\nVerify Your Email Address using this OTP: ${otp.otp}\n\nIf you didn't request this, please ignore this email.\nClickViral Team`;
-    const html = `<p>Hi ${user.first_name},</p><p>Verify Your Email Address using this OTP: <strong>${otp.otp}</strong></p><p>If you didn't request this, please ignore this email.</p><p>ClickViral Team</p>`;
+    const html = `<p><b>Hi ${user.first_name},</b></p><p>Verify Your Email Address using this OTP: <strong>${otp.otp}</strong></p><p>If you didn't request this, please ignore this email.</p><p>ClickViral Team</p>`;
 
-    await sendMail(user.email, 'ClickVial - Activate your account', text, html);
+    await sendMail(user.email, 'ClickViral - Activate your account', text, html);
 
     return true;
 
@@ -91,4 +88,28 @@ const resetEmail = async (user: any, newEmail: string): Promise<Boolean> => {
     return true;
 }
 
-export { sendMail, activateAccount, resetPassword, resetEmail };
+const notifyLogin = async (user: any, ip: string, device: string): Promise<Boolean> => {
+
+    const text = `Hi ${user.first_name}, \n\nNew Login on your Account\n\nDevice: ${device}\nIP: ${ip}\n\nIf you didn't request this, please ignore this email.\nClickViral Team`;
+    const html = `<p><b>Hi ${user.first_name}</b>,</p><p>New Login on your Account</p><p>Device: ${device}<br>IP: ${ip}<br></p><p>If you didn't request this, please ignore this email.</p><p>ClickViral Team</p>`;
+
+    sendMail(user.email, 'ClickViral - New Login Notification', text, html);
+
+    return true;
+
+}
+
+const notifyLogin2FA = async (user: any): Promise<Boolean> => {
+
+    const otp = await Otp.create({ user_id: user.id, purpose: '2fa' });
+
+    const text = `Hi ${user.first_name}, \n\nNew Login on your Account\n\nUse this OTP to login: ${otp.otp}\n\nIf you didn't request this, please ignore this email.\nClickViral Team`;
+    const html = `<p><b>Hi ${user.first_name}</b>,</p><p>New Login on your Account</p><p>Use this OTP to login: <strong>${otp.otp}</strong></p><p>If you didn't request this, please ignore this email.</p><p>ClickViral Team</p>`;
+
+    sendMail(user.email, 'ClickViral - New Login Notification', text, html);
+
+    return true;
+
+}
+
+export { sendMail, activateAccount, resetPassword, resetEmail, notifyLogin, notifyLogin2FA };

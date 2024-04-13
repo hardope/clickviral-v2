@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { Request, Response } from 'express';
-import { User } from "../database/models/userModel";
+import { User, securityPreferences } from "../database/models/userModel";
 import * as mail from '../utils/mail';
 import Otp from '../database/models/otp';
 import { JWT_ACCESS_LIFETIME } from '../utils/environment';
@@ -30,9 +30,34 @@ const login = () => {
                 } else {
 
                     if (isMatch) {
+
+
+                        
                         const token = jwt.sign({id: user._id}, process.env.JWT_SECRET!, {expiresIn: JWT_ACCESS_LIFETIME});
                         user.last_login = new Date();
+
+                        const ip_address = `${req.headers['x-forwarded-for'] || req.socket.remoteAddress}`;
+                        const device = `${req.headers['user-agent']}`;
+
+                        const sec = await securityPreferences.findOne({user_id: user._id});
+
+                        if (sec && sec.two_factor_auth) {
+                            
+                            mail.notifyLogin2FA(user);
+
+                            res.status(201).send({
+                                "message": "Enter OTP sent to your email",
+                                "status": "success"
+                            });
+                        }
+
+
+                        if (sec && sec.login_notifications) {
+                            mail.notifyLogin(user, ip_address, device)
+                        }
+
                         await user.save();
+
                         res.status(200).send({
                             "data": {
                                 "token": token,
@@ -229,4 +254,46 @@ const changeEmail = () => {
     }
 }
 
-export { login, forgotPassword, resetPassword, startResetEmail, changeEmail };
+const updateSecurity = () => {
+
+    return async (req: Request, res: Response) => {
+        try {
+            const user = JSON.parse(req.headers.user as string);
+            const sec = await securityPreferences.findOneAndUpdate({user_id: user.id}, req.body, { new: true});
+
+            res.status(200).send({
+                "data": sec,
+                "message": "Security preferences updated successfully",
+                "status": "success"
+            });
+        } catch (error) {
+            res.status(500).send({
+                "message": "An error occurred while fetching security preferences",
+                "status": "error"
+            });
+        }
+    }
+}
+
+const getSecurity = () => {
+
+    return async (req: Request, res: Response) => {
+        try {
+            const user = JSON.parse(req.headers.user as string);
+            const sec = await securityPreferences.findOne({user_id: user.id});
+
+            res.status(200).send({
+                "data": sec,
+                "message": "Security preferences fetched successfully",
+                "status": "success"
+            });
+        } catch (error) {
+            res.status(500).send({
+                "message": "An error occurred while fetching security preferences",
+                "status": "error"
+            });
+        }
+    }
+}
+
+export { login, forgotPassword, resetPassword, startResetEmail, changeEmail, updateSecurity, getSecurity };
