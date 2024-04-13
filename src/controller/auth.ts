@@ -49,6 +49,8 @@ const login = () => {
                                 "message": "Enter OTP sent to your email",
                                 "status": "success"
                             });
+
+                            return;
                         }
 
 
