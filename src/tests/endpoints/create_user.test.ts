@@ -17,7 +17,7 @@ describe('Create User', () => {
 
     it('should create a new user', async () => {
         const userData = {
-            username: 'JohnDoe',
+            username: 'JohnDoe' + Date.now(),
             email: 'johndoe' + Date.now() + '@test.com', // Unique email for every test run
             password: 'password',
             first_name: 'John',
@@ -43,6 +43,67 @@ describe('Create User', () => {
 
             // Ensure password is not returned in the response for security
             expect(response.body.data.password).toBeUndefined();
+        } catch (error) {
+            console.error('Testing error:', error);
+            throw error; // Rethrow after logging
+        }
+    });
+
+    it('should return 400 if email is missing', async () => {
+        const userData = {
+            username: 'JohnDoe',
+            password: 'password',
+            first_name: 'John',
+            last_name: 'Doe',
+        };
+
+        try {
+            const response = await request(app)
+                .post('/user/create')
+                .send(userData)
+                .expect(400); // Checks if the status code is 400
+
+            // Assertions to check if the response from the app is correct
+            expect(response.body.message).toBeDefined();
+            expect(response.body.status).toBeDefined();
+            expect(response.body.message).toBe('\"email\" is required');
+            expect(response.body.status).toBe('error');
+        } catch (error) {
+            console.error('Testing error:', error);
+            throw error; // Rethrow after logging
+        }
+    });
+
+    it('should prevent creating a user with an existing email', async () => {
+        const userData = {
+            username: 'JohnDoe' + Date.now(),
+            email: 'johndoe' + Date.now() + '@test.com', // Unique email for every test run
+            password: 'password',
+            first_name: 'John',
+            last_name: 'Doe',
+        };
+
+        try {
+            // Create a user with the same email
+            await request(app).post('/user/create').send(userData).expect(201);
+
+            // Try to create another user with the same email
+            const response = await request(app)
+                .post('/user/create')
+                .send(
+                    Object.assign({}, userData, {
+                        username: 'JaneDoe',
+                        first_name: 'Jane',
+                        last_name: 'Doe',
+                    })
+                )
+                .expect(400); // Checks if the status code is 400
+
+            // Assertions to check if the response from the app is correct
+            expect(response.body.message).toBeDefined();
+            expect(response.body.status).toBeDefined();
+            expect(response.body.status).toBe('error');
+            expect(response.body.message).toBe('email already exists');
         } catch (error) {
             console.error('Testing error:', error);
             throw error; // Rethrow after logging
