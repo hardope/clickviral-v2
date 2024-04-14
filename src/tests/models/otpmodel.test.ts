@@ -25,7 +25,7 @@ describe('OTP Model', () => {
         const user = new User(UserData);
         const savedUser = await user.save();
 
-        const otp = new Otp({user_id: savedUser._id});
+        const otp = new Otp({user_id: savedUser._id, purpose: "test"});
         const savedOTP = await otp.save();
 
         expect(savedOTP._id).toBeDefined();

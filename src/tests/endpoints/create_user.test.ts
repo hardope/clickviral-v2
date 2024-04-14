@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import ConnectDB from '../../database/connect';
-import { User } from '../../database/models/userModel';
+import { User, securityPreferences } from '../../database/models/userModel';
 import request from 'supertest';
 import { app } from '../../index';
 
@@ -43,6 +43,40 @@ describe('Create User', () => {
 
             // Ensure password is not returned in the response for security
             expect(response.body.data.password).toBeUndefined();
+        } catch (error) {
+            console.error('Testing error:', error);
+            throw error; // Rethrow after logging
+        }
+    });
+
+    it('should create create security preferences for all users', async () => {
+        const userData = {
+            username: 'JohnDoe' + Date.now(),
+            email: 'johndoe' + Date.now() + '@test.com', // Unique email for every test run
+            password: 'password',
+            first_name: 'John',
+            last_name: 'Doe',
+        };
+
+        try {
+            const response = await request(app)
+                .post('/user/create')
+                .send(userData)
+                .expect(201); // Checks if the status code is 201
+
+            const userObject = await User.findOne({ email: userData.email });
+            let securityPreferencesObject = await securityPreferences.findOne({ user_id: userObject?._id });
+            if (!securityPreferencesObject) {
+                throw new Error('Security preferences not created');
+            }
+
+            // Assertions to check if the response from the app is correct
+            expect(securityPreferencesObject).toBeDefined();
+            expect(response.body.data).toBeDefined();
+
+            expect(securityPreferencesObject?.user_id.toString()).toBe(response.body.data.id);
+            expect(securityPreferencesObject?.two_factor_auth).toBe(false);
+            expect(securityPreferencesObject?.login_notifications).toBe(true);
         } catch (error) {
             console.error('Testing error:', error);
             throw error; // Rethrow after logging
