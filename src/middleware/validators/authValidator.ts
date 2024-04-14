@@ -6,4 +6,9 @@ export const authValidator = {
         two_factor_auth: Joi.boolean(),
         login_notifications: Joi.boolean(),
     }),
+
+    twoFactorLogin : Joi.object({
+        email: Joi.string().email().required(),
+        otp: Joi.string().required()
+    }),
 };

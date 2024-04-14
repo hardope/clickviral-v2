@@ -298,4 +298,55 @@ const getSecurity = () => {
     }
 }
 
-export { login, forgotPassword, resetPassword, startResetEmail, changeEmail, updateSecurity, getSecurity };
+const twoFactorLogin = () => {
+    return async (req: Request, res: Response) => {
+        try {
+            const email = req.body.email;
+            const otp = req.body.otp;
+            const user = await User.findOne({
+                email: email
+            });
+
+            if (!user) {
+                res.status(404).send({
+                    "message": "User not found",
+                    "status": "not_found"
+                });
+            } else {
+                const otpRecord = await Otp.findOne({
+                    user_id: user._id,
+                    otp: otp,
+                    purpose: "login"
+                });
+
+                if (!otpRecord) {
+                    res.status(401).send({
+                        "message": "Invalid OTP",
+                        "status": "unauthorized"
+                    });
+                } else {
+                    const token = jwt.sign({id: user._id}, process.env.JWT_SECRET!, {expiresIn: JWT_ACCESS_LIFETIME});
+                    user.last_login = new Date();
+                    await user.save();
+                    await Otp.deleteOne({user_id: user._id, otp: otp, purpose: "login"});
+                    res.status(200).send({
+                        "data": {
+                            "token": token,
+                            "user": user.toJSON()
+                        },
+                        "message": "User logged in successfully",
+                        "status": "success"
+                    });
+                }
+            }
+        } catch (error) {
+            
+            res.status(500).send({
+                "message": "An error occurred while logging in",
+                "status": "error"
+            });
+        }
+    }
+}
+
+export { login, forgotPassword, resetPassword, startResetEmail, changeEmail, updateSecurity, getSecurity, twoFactorLogin };

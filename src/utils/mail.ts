@@ -101,6 +101,8 @@ const notifyLogin = async (user: any, ip: string, device: string): Promise<Boole
 
 const notifyLogin2FA = async (user: any): Promise<Boolean> => {
 
+    await Otp.deleteMany({ user_id: user.id, purpose: 'login' });
+
     const otp = await Otp.create({ user_id: user.id, purpose: 'login' });
 
     const text = `Hi ${user.first_name}, \n\nNew Login on your Account\n\nUse this OTP to login: ${otp.otp}\n\nIf you didn't request this, please ignore this email.\nClickViral Team`;
