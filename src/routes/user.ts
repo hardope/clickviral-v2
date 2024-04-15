@@ -9,7 +9,8 @@ import { authValidator } from '../middleware/validators/authValidator';
 
 const userRouter = Router();
 
-userRouter.post('/admin/create', validateSchema(userValidator.createAdmin), adminController.CreateAdmin());
+userRouter.get('/admin/grant/:id', [authorization(), isAdmin()], adminController.grantAdminAccess());
+userRouter.get('/admin/revoke/:id', [authorization(), isAdmin()], adminController.revokeAdminAccess());
 userRouter.get('/admin/activate/:id', [authorization(), isAdmin()], adminController.activateUser());
 userRouter.get('/admin/deactivate/:id', [authorization(), isAdmin()], adminController.deactivateUser());
 

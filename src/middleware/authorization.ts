@@ -27,7 +27,7 @@ const authorization = () => {
             var user = await User.findById(decoded.id);
             if (!user) {
                 return res.status(404).send({
-                    "message": "Invalid AUthenticatd User",
+                    "message": "Invalid Authenticatd User",
                     "status": "not_found"
                 });
             }

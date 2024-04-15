@@ -3,6 +3,15 @@ import { User } from '../../database/models/userModel';
 
 const isAdmin = () => {
     return async (req: Request, res: Response, next: NextFunction) => {
+        // Check if user is logged in
+        if (!req.headers.user) {
+            res.status(401).send({
+                "message": "You must be logged in to perform this action",
+                "status": "unauthorized"
+            });
+            return;
+        }
+
         const user = JSON.parse(req.headers.user as string).id;
 
         try {

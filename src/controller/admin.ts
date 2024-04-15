@@ -1,40 +1,40 @@
 import { Request, Response } from "express";
 import { User } from "../database/models/userModel";
-import { ADMIN_ACCESS_CODES } from "../utils/environment";
 
-const CreateAdmin = () => {
+const grantAdminAccess = () => {
     return async (req: Request, res: Response) => {
         try {
+            const user = await User.findByIdAndUpdate(req.params.id, { is_admin: true }, { new: true });
 
-            var admin_code = req.body.admin_code;
-
-            if (ADMIN_ACCESS_CODES.includes(admin_code)) {
-                res.status(401).send({
-                    "message": "Invalid admin code",
-                    "status": "unauthorized"
-                });
-                return;
-            }
-
-            const user = new User(req.body);
-            user.is_admin = true;
-            user.is_active = true;
-            await user.save();
-            res.status(201).send({
+            res.status(200).send({
                 "data": user,
-                "message": "Admin created successfully",
+                "message": "Admin access granted successfully",
                 "status": "success"
             });
-        } catch (error: any) {
-            if (error.code === 11000) {
-                res.status(400).send({
-                    "message": `${Object.keys(error.keyValue)[0]} already exists`,
-                    "status": "error"
-                });
-                return;
-            }
+
+        } catch (error) {
             res.status(500).send({
-                "message": "An error occurred while creating admin",
+                "message": "An error occurred while granting admin access",
+                "status": "error"
+            });
+        }
+    }
+}
+
+const revokeAdminAccess = () => {
+    return async (req: Request, res: Response) => {
+        try {
+            const user = await User.findByIdAndUpdate(req.params.id, { is_admin: false }, { new: true });
+
+            res.status(200).send({
+                "data": user,
+                "message": "Admin access revoked successfully",
+                "status": "success"
+            });
+
+        } catch (error) {
+            res.status(500).send({
+                "message": "An error occurred while revoking admin access",
                 "status": "error"
             });
         }
@@ -79,4 +79,4 @@ const deactivateUser = () => {
     }
 }
 
-export { CreateAdmin, activateUser, deactivateUser };
+export { activateUser, deactivateUser, grantAdminAccess, revokeAdminAccess};
