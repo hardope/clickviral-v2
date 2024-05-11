@@ -6,7 +6,8 @@
     "scripts": {
         "build": "tsc",
         "stage": "mkdir assets",
-        "start": "nodemon ./dist/index.js",
+        "start": "rm -rf dist/ && npm run build && node ./dist/index.js",
+        "start-dev": "rm -rf dist/ && npm run build && nodemon ./dist/index.js",
         "teardown": "node ./dist/teardown.js",
         "test": "jest --forceExit --silent",
         "create_admin": "node ./dist/create_admin.js"
