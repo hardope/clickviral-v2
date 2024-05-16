@@ -9,6 +9,7 @@ import cors from 'cors';
 
 const allowedHosts = [
     'http://localhost:8000',
+    'https://clickviral.hardope.tech'
     // Add more as needed
 ];
 
