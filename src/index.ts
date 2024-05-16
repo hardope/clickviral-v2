@@ -3,21 +3,21 @@ import router from './routes/index';
 import connectDB from './database/connect';
 import bodyParser from 'body-parser';
 import logger from './middleware/logger';
-import { PORT } from './utils/environment';
+import { PORT, ALLOWED_HOSTS, DEV } from './utils/environment';
 import fileUpload from 'express-fileupload';
 import cors from 'cors';
 
-const allowedHosts = [
-    'http://localhost:8000',
-    'https://clickviral.hardope.tech'
-    // Add more as needed
-];
-
 const corsOptions = {
     origin: (origin: any, callback: any) => {
-        if (allowedHosts.includes(origin)) {
+        if (DEV) {
+            if (!origin) {
+                return callback(null, true);
+            }
+        }
+        if (ALLOWED_HOSTS.includes(origin) || ALLOWED_HOSTS.includes('*') || origin.startsWith('http://localhost')) {
             return callback(null, true);
         }
+
         callback(new Error('Not allowed by CORS'));
     }
 };

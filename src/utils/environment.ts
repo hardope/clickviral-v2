@@ -23,3 +23,5 @@ export const SMTP_PORT = process.env.SMTP_PORT;
 export const SMTP_USER = process.env.SMTP_USER;
 export const SMTP_PASSWORD = process.env.SMTP_PASSWORD;
 export const PASSWORD_SALT_ROUNDS = process.env.SALT_ROUNDS || 10;
+export const ALLOWED_HOSTS = process.env.ALLOWED_HOSTS?.split(',') || ['http://localhost:8000'];
+export const DEV = process.env.DEV || true;
