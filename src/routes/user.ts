@@ -15,6 +15,7 @@ userRouter.get('/admin/activate/:id', [authorization(), isAdmin()], adminControl
 userRouter.get('/admin/deactivate/:id', [authorization(), isAdmin()], adminController.deactivateUser());
 
 userRouter.get('/', authorization(), isAdmin(), userController.getUsers());
+userRouter.get('/me', authorization(), userController.getMe());
 userRouter.post('/create', validateSchema(userValidator.register), userController.createUser());
 userRouter.get('/search', authorization(), userController.searchUser());
 userRouter.put('/security', [authorization()], validateSchema(authValidator.security), authController.updateSecurity());

@@ -55,6 +55,32 @@ const getUser = () => {
     }
 }
 
+const getMe = () => {
+    return async (req: Request, res: Response) => {
+        try {
+            const user = await User.findById(JSON.parse(req.headers.user as string).id);
+            if (!user) {
+                res.status(404).send({
+                    "message": "User not found",
+                    "status": "not_found"
+                });
+                return;
+            }
+            // If user found, send it as response
+            res.status(200).send({
+                "data": user,
+                "message": "User retrieved successfully",
+                "status": "success"
+            });
+        } catch (error) {
+            res.status(500).send({
+                "message": "An error occurred while retrieving user",
+                "status": "error"
+            });
+        }
+    }
+}
+
 const getUserByUsername = () => {
     return async (req: Request, res: Response) => {
         try {
@@ -439,5 +465,6 @@ export {
     deactivateUser,
     uploadImage,
     getImages,
-    getUserByUsername
+    getUserByUsername,
+    getMe
 };
