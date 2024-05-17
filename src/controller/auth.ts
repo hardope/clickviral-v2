@@ -47,7 +47,7 @@ const login = () => {
 
                             res.status(201).send({
                                 "message": "Enter OTP sent to your email",
-                                "status": "success"
+                                "status": "success - otp"
                             });
 
                             return;
