@@ -19,7 +19,8 @@ userRouter.post('/create', validateSchema(userValidator.register), userControlle
 userRouter.get('/search', authorization(), userController.searchUser());
 userRouter.put('/security', [authorization()], validateSchema(authValidator.security), authController.updateSecurity());
 userRouter.get('/security', [authorization()], authController.getSecurity());
-userRouter.get('/:id', [authorization(), isUserorReadonly()], userController.getUser());
+userRouter.get('/:id', userController.getUser());
+userRouter.get('/username/:username', userController.getUserByUsername());
 userRouter.put('/:id', [authorization(), isUserorReadonly()], validateSchema(userValidator.update), userController.updateUser());
 userRouter.delete('/:id', [authorization(), isUserorReadonly()], userController.deleteUser());
 userRouter.post('/verify/:id', validateSchema(userValidator.verify), userController.verifyUser());
