@@ -22,7 +22,7 @@ const login = () => {
             } else {
                 const isMatch = await bcrypt.compare(password, user.password);
 
-                if (user.is_active === false) {
+                if (!user.is_active) {
                     res.status(401).send({
                         "message": "Account Not Activated",
                         "status": "unauthorized"
