@@ -25,7 +25,7 @@ const login = () => {
                 if (!user.is_active) {
                     res.status(401).send({
                         "message": "Account Not Activated",
-                        "status": "unauthorized"
+                        "status": "unauthorized-inactive"
                     });
                 } else {
 
