@@ -31,7 +31,7 @@ app.use(logger());
 app.use(fileUpload());
 
 app.get('/', (_req, res) => {
-    res.send('<h1>ClickViral API</h1>');
+    res.send('<h1>ClickViral Backend API V2</h1>');
 });
 
 app.use('/', router);
