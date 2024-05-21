@@ -22,59 +22,55 @@ const login = () => {
             } else {
                 const isMatch = await bcrypt.compare(password, user.password);
 
+                if (!isMatch) {
+                    res.status(401).send({
+                        "message": "Invalid credentials",
+                        "status": "unauthorized"
+                    });
+                    return;
+                }
+
                 if (!user.is_active) {
                     res.status(401).send({
                         "message": "Account Not Activated",
                         "status": "unauthorized-inactive"
                     });
-                } else {
-
-                    if (isMatch) {
-
-
-                        
-                        const token = jwt.sign({id: user._id}, process.env.JWT_SECRET!, {expiresIn: JWT_ACCESS_LIFETIME});
-                        user.last_login = new Date();
-
-                        const ip_address = `${req.headers['x-forwarded-for'] || req.socket.remoteAddress}`;
-                        const device = `${req.headers['user-agent']}`;
-
-                        const sec = await securityPreferences.findOne({user_id: user._id});
-
-                        if (sec && sec.two_factor_auth) {
-                            
-                            mail.notifyLogin2FA(user);
-
-                            res.status(201).send({
-                                "message": "Enter OTP sent to your email",
-                                "status": "success - otp"
-                            });
-
-                            return;
-                        }
-
-
-                        if (sec && sec.login_notifications) {
-                            mail.notifyLogin(user, ip_address, device)
-                        }
-
-                        await user.save();
-
-                        res.status(200).send({
-                            "data": {
-                                "token": token,
-                                "user": user.toJSON()
-                            },
-                            "message": "User logged in successfully",
-                            "status": "success"
-                        });
-                    } else {
-                        res.status(401).send({
-                            "message": "Invalid credentials",
-                            "status": "unauthorized"
-                        });
-                    }
+                    return;
                 }
+
+                const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET!, { expiresIn: JWT_ACCESS_LIFETIME });
+                user.last_login = new Date();
+
+                const ip_address = `${req.headers['x-forwarded-for'] || req.socket.remoteAddress}`;
+                const device = `${req.headers['user-agent']}`;
+
+                const sec = await securityPreferences.findOne({ user_id: user._id });
+
+                if (sec && sec.two_factor_auth) {
+                    mail.notifyLogin2FA(user);
+
+                    res.status(201).send({
+                        "message": "Enter OTP sent to your email",
+                        "status": "success - otp"
+                    });
+
+                    return;
+                }
+
+                if (sec && sec.login_notifications) {
+                    mail.notifyLogin(user, ip_address, device)
+                }
+
+                await user.save();
+
+                res.status(200).send({
+                    "data": {
+                        "token": token,
+                        "user": user.toJSON()
+                    },
+                    "message": "User logged in successfully",
+                    "status": "success"
+                });
             }
         } catch (error) {
             res.status(500).send({
