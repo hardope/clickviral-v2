@@ -45,11 +45,8 @@ const resetPassword = async (user: any): Promise<Boolean> => {
 
     var otp;
 
-    otp = await Otp.findOne({ user_id: user.id, purpose: 'forgot_password' });
-
-    if (!otp) {
-        otp = await Otp.create({ user_id: user.id, purpose: 'forgot_password' });
-    }
+    await Otp.deleteMany({ user_id: user._id, purpose: 'forgot_password' });
+    otp = await Otp.create({ user_id: user.id, purpose: 'forgot_password' });
 
     const text = `Hi ${user.first_name},\nReset Your Password using this OTP: ${otp.otp}\n\nIf you didn't request this, please ignore this email.\nClickViral Team`;
     const html = `<p>Hi ${user.first_name},</p><p>Reset Your Password using this OTP: <strong>${otp.otp}</strong></p><p>If you didn't request this, please ignore this email.</p><p>ClickViral Team</p>`;
