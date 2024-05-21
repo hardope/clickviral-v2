@@ -34,6 +34,10 @@ app.get('/', (_req, res) => {
     res.send('<h1>ClickViral Backend API V2</h1>');
 });
 
+app.get('/docs', (_req, res) => {
+    res.send('<h1>ClickViral API V2 - Documentation</h1>');
+});
+
 app.use('/', router);
 
 app.listen(PORT, () => {
