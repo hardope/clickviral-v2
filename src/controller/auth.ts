@@ -123,7 +123,7 @@ const verifyResetOtp = () => {
                     "status": "not_found"
                 });
             } else {
-                const otpRecord = await Otp.findOne({user_id: user._id, otp: otp, purpose: "password_reset"});
+                const otpRecord = await Otp.findOne({user_id: user._id, otp: otp, purpose: "forgot_password"});
 
                 if (!otpRecord) {
                     res.status(401).send({
@@ -160,7 +160,7 @@ const resetPassword = () => {
                     "status": "not_found"
                 });
             } else {
-                const otpRecord = await Otp.findOne({user_id: user._id, otp: otp, purpose: "password_reset"});
+                const otpRecord = await Otp.findOne({user_id: user._id, otp: otp, purpose: "forgot_password"});
 
                 if (!otpRecord) {
                     res.status(401).send({
