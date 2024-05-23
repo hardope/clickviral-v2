@@ -187,6 +187,58 @@ const resetPassword = () => {
     }
 }
 
+const changePassword = () => {
+    return async (req: Request, res: Response) => {
+        try {
+            const old_password = req.body.old_password;
+            const new_password = req.body.new_password;
+
+            const user_data = JSON.parse(req.headers.user as string);
+            const user = await User.findOne({ id: user_data.id });
+
+            if (!user) {
+                res.status(404).send({
+                    "message": "User not found",
+                    "status": "not_found"
+                });
+                return;
+            }
+
+            const isMatch = await bcrypt.compare(old_password, user.password);
+
+            if (!isMatch) {
+                res.status(401).send({
+                    "message": "Invalid credentials",
+                    "status": "unauthorized"
+                });
+                return;
+            }
+
+            if (old_password == new_password) {
+                res.status(400).send({
+                    "message": "New password cannot be the same as old password",
+                    "status": "bad_request"
+                });
+                return;
+            }
+
+            user.password = new_password;
+            await user.save();
+
+            res.status(200).send({
+                "message": "Password changed successfully",
+                "status": "success"
+            });
+
+        } catch (error) {
+            res.status(500).send({
+                "message": "An error occurred while changing password",
+                "status": "error"
+            });
+        }
+    }
+}
+
 const startResetEmail = () => {
     return async (req: Request, res: Response) => {
         try {
@@ -390,4 +442,5 @@ export {
     getSecurity,
     twoFactorLogin,
     verifyResetOtp,
+    changePassword
 };

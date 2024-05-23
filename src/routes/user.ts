@@ -33,6 +33,7 @@ userRouter.post('/verify-reset-password-otp', authController.verifyResetOtp());
 userRouter.post('/reset-password', validateSchema(userValidator.resetPassword), authController.resetPassword());
 userRouter.post('/send-change-email-otp', [authorization()], validateSchema(userValidator.startresetEmail), authController.startResetEmail());
 userRouter.post('/change-email', [authorization()], validateSchema(userValidator.changeEmail), authController.changeEmail());
+userRouter.post('/change-password', [authorization], authController.changePassword());
 userRouter.post('/login', validateSchema(userValidator.login), authController.login());
 userRouter.post('/two-factor-login', validateSchema(authValidator.twoFactorLogin), authController.twoFactorLogin());
 userRouter.post('/upload-image', authorization(), userController.uploadImage());
