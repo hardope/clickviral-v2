@@ -2,11 +2,12 @@ import { Request, Response } from 'express';
 import { User } from "../../database/models/userModel";
 import Otp from '../../database/models/otp';
 
-const verifyResetOtp = () => {
+const verifyOtp = () => {
     return async (req: Request, res: Response) => {
         try {
             const email = req.body.email;
             const otp = req.body.otp;
+            const purpose = req.body.purpose;
             const user = await User.findOne({ email: email });
 
             if (!user) {
@@ -15,7 +16,7 @@ const verifyResetOtp = () => {
                     "status": "not_found"
                 });
             } else {
-                const otpRecord = await Otp.findOne({user_id: user._id, otp: otp, purpose: "forgot_password"});
+                const otpRecord = await Otp.findOne({user_id: user._id, otp: otp, purpose: purpose});
 
                 if (!otpRecord) {
                     res.status(401).send({
@@ -38,4 +39,4 @@ const verifyResetOtp = () => {
     }
 }
 
-export { verifyResetOtp }
+export { verifyOtp }

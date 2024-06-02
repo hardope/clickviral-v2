@@ -29,7 +29,7 @@ userRouter.post('/find-account', validateSchema(userValidator.findAccount), user
 userRouter.post('/deactivate/:id', [authorization(), isUserorReadonly()], userController.deactivateUser());
 userRouter.post('/send-verification-email/:id', userController.sendVerificationMail());
 userRouter.post('/send-reset-password-otp', validateSchema(userValidator.forgotPassword), authController.forgotPassword());
-userRouter.post('/verify-reset-password-otp', authController.verifyResetOtp());
+userRouter.post('/verify-reset-password-otp', authController.verifyOtp());
 userRouter.post('/reset-password', validateSchema(userValidator.resetPassword), authController.resetPassword());
 userRouter.post('/send-change-email-otp', [authorization()], validateSchema(userValidator.startresetEmail), authController.startResetEmail());
 userRouter.post('/change-email', [authorization()], validateSchema(userValidator.changeEmail), authController.changeEmail());
