@@ -35,6 +35,7 @@ userRouter.post('/send-change-email-otp', [authorization()], validateSchema(user
 userRouter.post('/change-email', [authorization()], validateSchema(userValidator.changeEmail), authController.changeEmail());
 userRouter.post('/change-password', [authorization], authController.changePassword());
 userRouter.post('/login', validateSchema(userValidator.login), authController.login());
+userRouter.post('/refresh', authController.refresh());
 userRouter.post('/two-factor-login', validateSchema(authValidator.twoFactorLogin), authController.twoFactorLogin());
 userRouter.post('/upload-image', authorization(), userController.uploadImage());
 userRouter.get('/get-images/:id', userController.getImages());

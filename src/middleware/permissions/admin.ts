@@ -5,7 +5,6 @@ const isAdmin = () => {
     return async (req, res, next: NextFunction) => {
 
         const userObj = req.user;
-        console.log(req.user)
 
         if (userObj && userObj.is_admin) {
 

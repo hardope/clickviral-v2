@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 import { User, securityPreferences } from "../../database/models/userModel";
 import * as mail from '../../utils/mail';
 import Otp from '../../database/models/otp';
-import { JWT_ACCESS_LIFETIME } from '../../utils/environment';
+import { JWT_ACCESS_LIFETIME, JWT_REFRESH_LIFETIME, JWT_SECRET } from '../../utils/environment';
 
 const login = () => {
     return async (req: Request, res: Response) => {
@@ -38,7 +38,8 @@ const login = () => {
                     return;
                 }
 
-                const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET!, { expiresIn: JWT_ACCESS_LIFETIME });
+                const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: JWT_ACCESS_LIFETIME });
+                const refreshToken = jwt.sign({ email: user.email }, JWT_SECRET, { expiresIn: JWT_REFRESH_LIFETIME });
                 user.last_login = new Date();
 
                 const ip_address = `${req.headers['x-forwarded-for'] || req.socket.remoteAddress}`;
@@ -66,6 +67,7 @@ const login = () => {
                 res.status(200).send({
                     "data": {
                         "token": token,
+                        "refreshToken": refreshToken,
                         "user": user.toJSON()
                     },
                     "message": "User logged in successfully",
@@ -108,13 +110,15 @@ const twoFactorLogin = () => {
                         "status": "unauthorized"
                     });
                 } else {
-                    const token = jwt.sign({id: user._id}, process.env.JWT_SECRET!, {expiresIn: JWT_ACCESS_LIFETIME});
+                    const token = jwt.sign({id: user._id}, JWT_SECRET, {expiresIn: JWT_ACCESS_LIFETIME});
+                    const refreshToken = jwt.sign({email: user.email}, JWT_SECRET!, {expiresIn: JWT_REFRESH_LIFETIME});
                     user.last_login = new Date();
                     await user.save();
                     await Otp.deleteOne({user_id: user._id, otp: otp, purpose: "login"});
                     res.status(200).send({
                         "data": {
                             "token": token,
+                            "refreshToken": refreshToken,
                             "user": user.toJSON()
                         },
                         "message": "User logged in successfully",
@@ -132,7 +136,48 @@ const twoFactorLogin = () => {
     }
 }
 
+const refresh = () => {
+    return async (req: Request, res: Response) => {
+        try {
+            const token = req.body.refreshToken;
+            const user = await User.findOne({ email: req.body.email });
+
+            if (!user) {
+                res.status(404).send({
+                    "message": "User not found",
+                    "status": "not_found"
+                });
+            } else {
+                jwt.verify(token, JWT_SECRET, (err, _userobj) => {
+                    if (err) {
+                        res.status(401).send({
+                            "message": "Invalid token",
+                            "status": "unauthorized"
+                        });
+                    } else {
+                        const newToken = jwt.sign({id: user._id}, JWT_SECRET, {expiresIn: JWT_ACCESS_LIFETIME});
+                        res.status(200).send({
+                            "data": {
+                                "token": newToken,
+                                "user": user
+                            },
+                            "message": "Token refreshed successfully",
+                            "status": "success"
+                        });
+                    }
+                });
+            }
+        } catch (error) {
+            res.status(500).send({
+                "message": "An error occurred while refreshing token",
+                "status": "error"
+            });
+        }
+    }
+}
+
 export {
     login,
-    twoFactorLogin
+    twoFactorLogin,
+    refresh
 }
