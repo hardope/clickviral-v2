@@ -1,12 +1,12 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction } from 'express';
 import { User } from '../../database/models/userModel';
 
 const isUserorReadonly = () => {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return async (req, res, next: NextFunction) => {
 
         try {
 
-            const userObj = await User.findOne({ _id: JSON.parse(req.headers.user as string).id });
+            const userObj = req.user;
             var finduser = await User.findOne({ _id: req.params.id });
 
             if (!userObj) {
