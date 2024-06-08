@@ -1,4 +1,4 @@
-import { login, twoFactorLogin } from './login';
+import { login, twoFactorLogin, refresh } from './login';
 import { updateSecurity, getSecurity } from './security';
 import { startResetEmail, changeEmail } from './email';
 import { changePassword, resetPassword, forgotPassword } from './password';
@@ -14,4 +14,5 @@ export {
     verifyOtp,
     changePassword,
     login,
+    refresh
 };

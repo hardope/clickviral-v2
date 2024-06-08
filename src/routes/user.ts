@@ -4,7 +4,7 @@ import * as authController from '../controller/auth';
 import * as adminController from '../controller/admin';
 import { userValidator } from '../middleware/validators/userValidator';
 import { validateSchema } from '../middleware/validators/validator';
-import { authorization, isUserorReadonly, isAdmin } from '../middleware/authorization';
+import { authorization, isUserorReadonly, isAdmin } from '../middleware';
 import { authValidator } from '../middleware/validators/authValidator';
 
 const userRouter = Router();
@@ -18,8 +18,8 @@ userRouter.get('/', authorization(), isAdmin(), userController.getUsers());
 userRouter.get('/me', authorization(), userController.getMe());
 userRouter.post('/create', validateSchema(userValidator.register), userController.createUser());
 userRouter.get('/search', authorization(), userController.searchUser());
-userRouter.put('/security', [authorization()], validateSchema(authValidator.security), authController.updateSecurity());
-userRouter.get('/security', [authorization()], authController.getSecurity());
+userRouter.put('/security', authorization(), validateSchema(authValidator.security), authController.updateSecurity());
+userRouter.get('/security', authorization(), authController.getSecurity());
 userRouter.get('/:id', userController.getUser());
 userRouter.get('/username/:username', userController.getUserByUsername());
 userRouter.put('/:id', [authorization(), isUserorReadonly()], validateSchema(userValidator.update), userController.updateUser());
@@ -35,6 +35,7 @@ userRouter.post('/send-change-email-otp', [authorization()], validateSchema(user
 userRouter.post('/change-email', [authorization()], validateSchema(userValidator.changeEmail), authController.changeEmail());
 userRouter.post('/change-password', [authorization], authController.changePassword());
 userRouter.post('/login', validateSchema(userValidator.login), authController.login());
+userRouter.post('/refresh', authController.refresh());
 userRouter.post('/two-factor-login', validateSchema(authValidator.twoFactorLogin), authController.twoFactorLogin());
 userRouter.post('/upload-image', authorization(), userController.uploadImage());
 userRouter.get('/get-images/:id', userController.getImages());

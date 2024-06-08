@@ -6,6 +6,8 @@ import logger from './middleware/logger';
 import { PORT, ALLOWED_HOSTS, DEV } from './utils/environment';
 import fileUpload from 'express-fileupload';
 import cors from 'cors';
+import passport from 'passport';
+import { passportConfig } from './middleware/passport';
 
 const corsOptions = {
     origin: (origin: any, callback: any) => {
@@ -25,10 +27,13 @@ const corsOptions = {
 const app = express();
 connectDB();
 
+passportConfig();
+
 app.use(bodyParser.json());
 app.use(cors(corsOptions));
 app.use(logger());
 app.use(fileUpload());
+app.use(passport.initialize());
 
 app.get('/', (_req, res) => {
     res.send('<h1>ClickViral Backend API V2</h1>');

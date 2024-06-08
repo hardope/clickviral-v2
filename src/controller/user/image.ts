@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { User, UserImage } from "../../database/models/userModel";
+import { UserImage } from "../../database/models/userModel";
 import path from 'path';
 
 declare const __dirname: string;
@@ -48,19 +48,11 @@ const uploadImage = () => {
         mv: (path: string, callback: (err: any) => void) => void; // Assuming this is the type of the 'mv' function
     }
 
-    return async (req: Request, res: Response) => {
+    return async (req, res: Response) => {
 
         try {
 
-            const user: any = await User.findById(JSON.parse(req.headers.user as string).id);
-
-            if (!user) {
-                res.status(404).send({
-                    "message": "User not found",
-                    "status": "error"
-                });
-                return;
-            }
+            const user = req.user;
 
             if (!req.files || !req.files.image) {
                 res.status(400).send({

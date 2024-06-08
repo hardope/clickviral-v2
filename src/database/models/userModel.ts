@@ -100,4 +100,4 @@ securityPreferencesSchema.methods.toJSON = function() {
 
 const securityPreferences = mongoose.model('SecurityPreferences', securityPreferencesSchema);
 
-export { User, UserImage, securityPreferences };
+export { User, UserImage, securityPreferences, userSchema };

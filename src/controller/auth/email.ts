@@ -1,13 +1,13 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { User } from "../../database/models/userModel";
 import * as mail from '../../utils/mail';
 import Otp from '../../database/models/otp';
 
 const startResetEmail = () => {
-    return async (req: Request, res: Response) => {
+    return async (req, res: Response) => {
         try {
 
-            const user = JSON.parse(req.headers.user as string);
+            const user = req.user;
 
             if (!user) {
                 res.status(404).send({
@@ -33,7 +33,7 @@ const startResetEmail = () => {
 }
 
 const changeEmail = () => {
-    return async (req: Request, res: Response) => {
+    return async (req, res: Response) => {
         try {
             const email = req.body.email;
             const otp = req.body.otp;
@@ -48,7 +48,7 @@ const changeEmail = () => {
                 return;
             }
 
-            var loggedUser = JSON.parse(req.headers.user as string);
+            var loggedUser = req.user;
 
             if (user.email != loggedUser.email) {
                 res.status(401).send({

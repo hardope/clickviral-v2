@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
+import { Request, Response } from "express"; 
 import { User } from "../../database/models/userModel";
 
 const getUsers = () => {
-    return async (_req: Request, res: Response) => {
+    return async (_req, res) => {
         try {
             const users = await User.find();
             if (users.length === 0) {
@@ -51,28 +51,12 @@ const getUser = () => {
 }
 
 const getMe = () => {
-    return async (req: Request, res: Response) => {
-        try {
-            const user = await User.findById(JSON.parse(req.headers.user as string).id);
-            if (!user) {
-                res.status(404).send({
-                    "message": "User not found",
-                    "status": "not_found"
-                });
-                return;
-            }
-            // If user found, send it as response
-            res.status(200).send({
-                "data": user,
-                "message": "User retrieved successfully",
-                "status": "success"
-            });
-        } catch (error) {
-            res.status(500).send({
-                "message": "An error occurred while retrieving user",
-                "status": "error"
-            });
-        }
+    return async (req, res) => {
+        res.status(200).send({
+            "data": req.user.toJSON(),
+            "message": "User retrieved successfully",
+            "status": "success"
+        });
     }
 }
 
