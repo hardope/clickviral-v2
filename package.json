@@ -7,7 +7,8 @@
         "build": "tsc",
         "stage": "mkdir assets",
         "start": "rm -rf dist/ && npm run build && node ./dist/index.js",
-        "start-dev": "rm -rf dist/ && npm run build && nodemon ./dist/index.js",
+        "start:prod": "rm -rf dist/ && npm run build && node ./dist/index.js",
+        "start:dev": "nodemon",
         "teardown": "node ./dist/teardown.js",
         "test": "jest --forceExit --silent",
         "create_admin": "node ./dist/create_admin.js"
@@ -43,6 +44,7 @@
         "passport-jwt": "^4.0.1",
         "readline-sync": "^1.4.10",
         "ts-jest": "^29.1.2",
+        "ts-node": "^10.9.2",
         "typescript": "^5.3.3",
         "uuid": "^9.0.1"
     },
