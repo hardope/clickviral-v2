@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import ConnectDB from '../../database/connect';
-import { User, securityPreferences } from '../../database/models/userModel';
+import { User, securityPreferences } from '../../apps/user/models/userModel';
 import request from 'supertest';
 import { app } from '../../index';
 

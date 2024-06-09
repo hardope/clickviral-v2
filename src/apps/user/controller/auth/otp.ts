@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
-import { User } from "../../database/models/userModel";
-import Otp from '../../database/models/otp';
+import { User, Otp } from '../../models';
 
 const verifyOtp = () => {
     return async (req: Request, res: Response) => {

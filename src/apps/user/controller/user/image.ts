@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { UserImage } from "../../database/models/userModel";
+import { UserImage } from "../../models";
 import path from 'path';
 
 declare const __dirname: string;

@@ -1,11 +1,10 @@
 import { Router } from 'express';
-import * as userController from '../controller/user';
-import * as authController from '../controller/auth';
-import * as adminController from '../controller/admin';
-import { userValidator } from '../middleware/validators/userValidator';
-import { validateSchema } from '../middleware/validators/validator';
-import { authorization, isUserorReadonly, isAdmin } from '../middleware';
-import { authValidator } from '../middleware/validators/authValidator';
+import * as userController from './controller/user';
+import * as authController from './controller/auth';
+import * as adminController from './controller/admin';
+import { userValidator, authValidator } from './validators';
+import { validateSchema, authorization } from '../../middleware';
+import { isUserorReadonly, isAdmin } from './permissions';
 
 const userRouter = Router();
 

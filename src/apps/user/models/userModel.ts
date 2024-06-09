@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import { PASSWORD_SALT_ROUNDS } from '../../utils/environment';
+import { PASSWORD_SALT_ROUNDS } from '../../../utils/environment';
 import bcrypt from 'bcrypt';
 
 const userSchema = new Schema({

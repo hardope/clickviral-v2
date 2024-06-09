@@ -1,10 +1,9 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { Request, Response } from 'express';
-import { User, securityPreferences } from "../../database/models/userModel";
-import * as mail from '../../utils/mail';
-import Otp from '../../database/models/otp';
-import { JWT_ACCESS_LIFETIME, JWT_REFRESH_LIFETIME, JWT_SECRET } from '../../utils/environment';
+import { User, securityPreferences, Otp } from "../../models";
+import * as mail from '../../../../utils/mail';
+import { JWT_ACCESS_LIFETIME, JWT_REFRESH_LIFETIME, JWT_SECRET } from '../../../../utils/environment';
 
 const login = () => {
     return async (req: Request, res: Response) => {
