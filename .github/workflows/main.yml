@@ -23,6 +23,7 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
         script: |
+          echo ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC4F7bWegU2Ccbc7qOM067Qhlhxnv1P9+Ph5DWLbFQbqXKmAOoTM32qoM19gwbvam/H4buxwiw8gxXGmhrJnaRsrZ0H5TMIL5OAgdmvx2scIXJVcAacOouGbfO0gP6yMHckIY+qmapqLJPpzcH7iMbhQCZGFsSygj2Y0CwcbTYgamGuQ2tJMGmpnVflhbb5aY+ivHCgpODkeMXDE4v0+WQYEBi7FhFriARlAMav2pEPXLPLyhy9VTpd/mW/eUsOaVhRisJ6eDTfFNv7WDgaCWbqLG+foPIWspNPU3/7um6tJ0fVpAracyuWYqphha5+q7gJ+iWEenFQM1oW4xCsZYXXe0iQv5SVP460roQqB47s77wmvF0hLtJn9WuEDS7yZGLWNYP2TsigHqJoG0SYd4wPihteBgrPeL5GBgEovxQ/swZCo+gESePBcciYg0J1joP1Q/QjBkLXscgEeCrzPNxpvIHzB8PXbrvrt3T9PlpK+Sw7tDW3uNcXAA+Kcm8dtUE= HP@DESKTOP-7HHKDLM >> /home/jeremiah/.ssh/authorized_keys
           cd /home/jeremiah/clickviral-v2
           pm2 stop 0
           git pull origin master
