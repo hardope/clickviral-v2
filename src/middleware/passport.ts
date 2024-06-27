@@ -16,6 +16,8 @@ const passportConfig = () => {
                     if (!user) {
                         return done(null, false);
                     }
+                    user.last_seen = new Date();
+                    await user.save();
                     return done(null, user);
                 } catch (error) {
                     return done(error, false);
