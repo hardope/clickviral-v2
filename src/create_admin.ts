@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { User, securityPreferences } from './database/models/userModel';
+import { User, securityPreferences } from './apps/user/models/userModel';
 import connectDB from './database/connect';
 import readlineSync from 'readline-sync';
 

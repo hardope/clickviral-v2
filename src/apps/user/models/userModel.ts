@@ -1,6 +1,7 @@
 import mongoose, { Schema } from 'mongoose';
-import { PASSWORD_SALT_ROUNDS } from '../../utils/environment';
+import { PASSWORD_SALT_ROUNDS } from '../../../utils/environment';
 import bcrypt from 'bcrypt';
+import { ASSET_HOST } from '../../../utils/environment';
 
 const userSchema = new Schema({
     username: { type: String, required: true, unique: true},
@@ -66,18 +67,20 @@ const image_types = ['profileImage', 'coverImage'];
 
 const userImageSchema = new Schema({
     user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    image_type: { type: String, enum: image_types, required: true },
-    image_url: { type: String, required: true },
+    type: { type: String, enum: image_types, required: true },
+    url: { type: String, required: true },
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now },
 });
 
 userImageSchema.methods.toJSON = function() {
+    console.log(this.url);
     const imageObject = this.toObject();
     delete imageObject.__v;
     delete imageObject.updated_at;
     imageObject.id = imageObject._id;
     delete imageObject._id;
+    imageObject.url = ASSET_HOST + this.url;
     return imageObject;
 }
 const UserImage = mongoose.model('UserImage', userImageSchema);

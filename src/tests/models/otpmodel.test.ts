@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import ConnectDB from '../../database/connect';
-import Otp from '../../database/models/otp';
-import { User } from '../../database/models/userModel';
+import Otp from '../../apps/user/models/otp';
+import { User } from '../../apps/user/models/userModel';
 
 describe('OTP Model', () => {
     beforeAll(async () => {

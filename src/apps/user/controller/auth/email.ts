@@ -1,7 +1,6 @@
 import { Response } from 'express';
-import { User } from "../../database/models/userModel";
-import * as mail from '../../utils/mail';
-import Otp from '../../database/models/otp';
+import { User, Otp } from "../../models";
+import * as mail from '../../../../utils/mail';
 
 const startResetEmail = () => {
     return async (req, res: Response) => {

@@ -1,5 +1,5 @@
 import { NextFunction } from 'express';
-import { User } from '../../database/models/userModel';
+import { User } from '../models/userModel';
 
 const isUserorReadonly = () => {
     return async (req, res, next: NextFunction) => {

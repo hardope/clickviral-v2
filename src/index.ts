@@ -4,7 +4,7 @@ import connectDB from './database/connect';
 import bodyParser from 'body-parser';
 import logger from './middleware/logger';
 import { PORT, ALLOWED_HOSTS, DEV } from './utils/environment';
-import fileUpload from 'express-fileupload';
+// import fileUpload from 'express-fileupload';
 import cors from 'cors';
 import passport from 'passport';
 import { passportConfig } from './middleware/passport';
@@ -28,11 +28,11 @@ const app = express();
 connectDB();
 
 passportConfig();
-
+// app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors(corsOptions));
 app.use(logger());
-app.use(fileUpload());
+// app.use(fileUpload());
 app.use(passport.initialize());
 
 app.get('/', (_req, res) => {

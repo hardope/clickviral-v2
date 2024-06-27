@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-import { User, securityPreferences } from "../../database/models/userModel";
-import { activateAccount } from "../../utils/mail";
-import Otp from "../../database/models/otp";
+import { User, securityPreferences, Otp } from "../../models";
+import { activateAccount } from "../../../../utils/mail";
 
 const createUser = () => {
     return async (req: Request, res: Response) => {

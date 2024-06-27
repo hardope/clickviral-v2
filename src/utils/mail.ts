@@ -1,6 +1,6 @@
 import nodemailer, { SentMessageInfo } from 'nodemailer';
 import { SMTP_USER, SMTP_HOST, SMTP_PORT , SMTP_PASSWORD  } from './environment';
-import Otp from '../database/models/otp';
+import Otp from '../apps/user/models/otp';
 
 const transporter = nodemailer.createTransport({
     host: SMTP_HOST,

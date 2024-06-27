@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { securityPreferences } from "../../database/models/userModel";
+import { securityPreferences } from "../../models";
 
 const updateSecurity = () => {
 

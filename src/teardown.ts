@@ -1,7 +1,7 @@
 import connect from "mongoose";
 import { MONGODB_URI } from "./utils/environment";
-import { User, securityPreferences, UserImage } from "./database/models/userModel"; // Replace "YourModel" with your actual model name
-import Otp from "./database/models/otp"; // Replace "YourModel" with your actual model name
+import { User, securityPreferences, UserImage } from "./apps/user/models/userModel"; // Replace "YourModel" with your actual model name
+import Otp from "./apps/user/models/otp"; // Replace "YourModel" with your actual model name
 
 const connectDB = async () => {
     try {

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { User } from "../../database/models/userModel";
+import { User } from "../../models";
 
 const grantAdminAccess = () => {
     return async (req: Request, res: Response) => {
