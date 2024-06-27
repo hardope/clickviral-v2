@@ -5,6 +5,7 @@ import * as adminController from './controller/admin';
 import { userValidator, authValidator } from './validators';
 import { validateSchema, authorization } from '../../middleware';
 import { isUserorReadonly, isAdmin } from './permissions';
+import upload from '../../utils/upload_manager';
 
 const userRouter = Router();
 
@@ -36,7 +37,8 @@ userRouter.post('/change-password', [authorization], authController.changePasswo
 userRouter.post('/login', validateSchema(userValidator.login), authController.login());
 userRouter.post('/refresh', authController.refresh());
 userRouter.post('/two-factor-login', validateSchema(authValidator.twoFactorLogin), authController.twoFactorLogin());
-userRouter.post('/upload-image', authorization(), userController.uploadImage());
+userRouter.post('/upload-image', authorization(), upload.single('file'), userController.uploadImage());
 userRouter.get('/get-images/:id', userController.getImages());
 
 export default userRouter;
+ 

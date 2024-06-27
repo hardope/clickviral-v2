@@ -1,8 +1,5 @@
 import { Request, Response } from "express";
-import { UserImage } from "../../models";
-import path from 'path';
-
-declare const __dirname: string;
+import { User, UserImage } from "../../models";
 
 const getImages = () => {
     return async (req: Request, res: Response) => {
@@ -36,94 +33,56 @@ const getImages = () => {
 
 const uploadImage = () => {
 
-    interface UploadedImage {
-        name: string;
-        data: Buffer;
-        size: number;
-        encoding: string;
-        tempFilePath: string;
-        truncated: boolean;
-        mimetype: string;
-        md5: string;
-        mv: (path: string, callback: (err: any) => void) => void; // Assuming this is the type of the 'mv' function
-    }
-
     return async (req, res: Response) => {
-
         try {
-
-            const user = req.user;
-
-            if (!req.files || !req.files.image) {
-                res.status(400).send({
-                    "message": "No image found",
-                    "status": "error"
-                });
-                return;
-            }
-
-            if (!req.body.image_type) {
-                res.status(400).send({
-                    "message": "Image type not found",
-                    "status": "error"
-                });
-                return;
-            }
-
-            if (req.body.image_type !== 'profile' && req.body.image_type !== 'cover') {
-                res.status(400).send({
-                    "message": "Invalid image type",
-                    "status": "error"
-                });
-                return;
-            }
-
-            let type: { [key: string]: string } = {
+            const swap = {
                 'profile': 'profileImage',
                 'cover': 'coverImage'
-            }
+            };
 
-            req.body.image_type = type[req.body.image_type]
-
-            let imageobj = new UserImage({ user_id: user._id, image_type: req.body.image_type, image_url: '' });
-
-            const file = req.files.image as UploadedImage;
-            const extension = file.name.split('.').pop();
-            const fileName = `${imageobj.id}.${extension}`;
-
-            if (file.mimetype !== 'image/jpeg' && file.mimetype !== 'image/png' && file.mimetype !== 'image/jpg') {
+            if (!req.file) {
                 res.status(400).send({
-                    "message": "Invalid file type",
-                    "status": "error"
+                    "message": "No image uploaded",
+                    "status": "bad_request"
                 });
                 return;
             }
 
-            user[req.body.image_type] = `/assets/${fileName}`;
-            imageobj.image_url = `/assets/${fileName}`;
+            if (!req.body.image_type || !['profile', 'cover'].includes(req.body.image_type)) {
+                res.status(400).send({
+                    "message": "Invalid image type",
+                    "status": "false"
+                });
+                return;
+            }
 
-            await imageobj.save();
-            await user.save();
-
-            const uploadPath = path.join(__dirname, `../../assets/${fileName}`);
-
-            file.mv(uploadPath, (err) => {
-                if (err) {
-                    console.error("Error uploading image:", err);
-                    res.status(500).send({
-                        "message": "An error occurred while uploading image",
-                        "status": "error"
-                    });
-                    return;
-                }
+            const image = new UserImage({
+                user_id: req.user.id,
+                url: req.file.filename,
+                type: swap[req.body.image_type]
             });
 
-            res.status(200).send({
+            await image.save();
+
+            var user = await User.findById(req.user.id);
+            if (!user) {
+                res.status(404).send({
+                    "message": "User not found",
+                    "status": "not_found"
+                });
+                return;
+            }
+            user[swap[req.body.image_type]] = req.file.filename;
+            user.save();
+
+            res.status(201).send({
+                "data": image.toJSON(),
                 "message": "Image uploaded successfully",
                 "status": "success"
             });
-        } catch (err) {
-            console.error("Error uploading image:", err);
+
+        } catch (error) {
+            console.log(error);
             res.status(500).send({
                 "message": "An error occurred while uploading image",
                 "status": "error"
