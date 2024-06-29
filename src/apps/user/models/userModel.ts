@@ -58,6 +58,12 @@ userSchema.methods.toJSON = function() {
     delete userObject.last_login;
     userObject.id = userObject._id;
     delete userObject._id;
+    if (userObject.profileImage) {
+        userObject.profileImage = ASSET_HOST + userObject.profileImage;
+    }
+    if (userObject.coverImage) {
+        userObject.coverImage = ASSET_HOST + userObject.coverImage;
+    }
     return userObject;
 }
 
@@ -74,7 +80,6 @@ const userImageSchema = new Schema({
 });
 
 userImageSchema.methods.toJSON = function() {
-    console.log(this.url);
     const imageObject = this.toObject();
     delete imageObject.__v;
     delete imageObject.updated_at;
