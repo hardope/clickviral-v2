@@ -139,7 +139,8 @@ const refresh = () => {
     return async (req: Request, res: Response) => {
         try {
             const token = req.body.refreshToken;
-            const user = await User.findOne({ email: req.body.email });
+            const user_id = token ? jwt.decode(token) : null;
+            const user = await User.findById(user_id);
 
             if (!user) {
                 res.status(404).send({
