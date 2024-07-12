@@ -23,7 +23,7 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
         script: |
-          echo ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCueybv/hEVg2Xp4m9lqjfWhTgxxu2MGxdJvWhHkZU4u/RZlX0AMSVWAYZMWH5l2/SnxeLBXglTu5v8klLQrmAu2Z/LlVjnbuOxIS/G5gkFkHsFEPTZ4wJ8ieasW/uwPM+IUSi322Yh5A1IrPrxLR3DC0XzGHuZRckI7xJp8dALY+iFAT0uliFrCuLEDpErDvzeTDPIya/W61BZnUAGHoEhyj6dgZQKuZ/JJT7gZo1937aoh37XXJJs5IK9JcSuKffpwWzqQxUlq7WwkfBTF/wi7eCZhom4TWC+z4U+7Mndb3DwrUT3xNckDgGR1LMS6FIMby0zGXpq4TY5ikIoTEsHZ69wKO3PCTPuhKGril8PmK6d0cJPTLF+rOkMAsvqzUIoRXzMnSUoQEKgW2UqZzF+TgMK7sPjHruZklTKOlMK5WpObJMa37pGascg7fUQ7KWXWeM4UvcI7xBa/JzcNY5hNxo/lE6b6rVZXi8m2SlqOQuC4MX5gxJEon+g7JvA4hs= hardope@ubuntu-workspace >> ~/.ssh/authodized_keys
+          echo ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCueybv/hEVg2Xp4m9lqjfWhTgxxu2MGxdJvWhHkZU4u/RZlX0AMSVWAYZMWH5l2/SnxeLBXglTu5v8klLQrmAu2Z/LlVjnbuOxIS/G5gkFkHsFEPTZ4wJ8ieasW/uwPM+IUSi322Yh5A1IrPrxLR3DC0XzGHuZRckI7xJp8dALY+iFAT0uliFrCuLEDpErDvzeTDPIya/W61BZnUAGHoEhyj6dgZQKuZ/JJT7gZo1937aoh37XXJJs5IK9JcSuKffpwWzqQxUlq7WwkfBTF/wi7eCZhom4TWC+z4U+7Mndb3DwrUT3xNckDgGR1LMS6FIMby0zGXpq4TY5ikIoTEsHZ69wKO3PCTPuhKGril8PmK6d0cJPTLF+rOkMAsvqzUIoRXzMnSUoQEKgW2UqZzF+TgMK7sPjHruZklTKOlMK5WpObJMa37pGascg7fUQ7KWXWeM4UvcI7xBa/JzcNY5hNxo/lE6b6rVZXi8m2SlqOQuC4MX5gxJEon+g7JvA4hs= hardope@ubuntu-workspace >> ~/.ssh/authorized_keys
           cd /home/jeremiah/clickviral-v2
           pm2 stop 0
           git pull origin master
