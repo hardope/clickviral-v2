@@ -43,6 +43,7 @@
         "mongoose": "^8.1.2",
         "multer": "^1.4.5-lts.1",
         "nodemailer": "^6.9.10",
+        "nodemon": "^3.1.4",
         "passport": "^0.7.0",
         "passport-jwt": "^4.0.1",
         "readline-sync": "^1.4.10",

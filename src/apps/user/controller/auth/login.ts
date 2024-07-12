@@ -38,7 +38,7 @@ const login = () => {
                 }
 
                 const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: JWT_ACCESS_LIFETIME });
-                const refreshToken = jwt.sign({ email: user.email }, JWT_SECRET, { expiresIn: JWT_REFRESH_LIFETIME });
+                const refreshToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: JWT_REFRESH_LIFETIME });
                 user.last_login = new Date();
 
                 const ip_address = `${req.headers['x-forwarded-for'] || req.socket.remoteAddress}`;
@@ -110,7 +110,7 @@ const twoFactorLogin = () => {
                     });
                 } else {
                     const token = jwt.sign({id: user._id}, JWT_SECRET, {expiresIn: JWT_ACCESS_LIFETIME});
-                    const refreshToken = jwt.sign({email: user.email}, JWT_SECRET!, {expiresIn: JWT_REFRESH_LIFETIME});
+                    const refreshToken = jwt.sign({id: user._id}, JWT_SECRET!, {expiresIn: JWT_REFRESH_LIFETIME});
                     user.last_login = new Date();
                     await user.save();
                     await Otp.deleteOne({user_id: user._id, otp: otp, purpose: "login"});
@@ -139,7 +139,8 @@ const refresh = () => {
     return async (req: Request, res: Response) => {
         try {
             const token = req.body.refreshToken;
-            const user_id = token ? jwt.decode(token) : null;
+            const decodedToken = jwt.decode(token);
+            const user_id = decodedToken ? (decodedToken as any).id : null;
             const user = await User.findById(user_id);
 
             if (!user) {
@@ -168,6 +169,7 @@ const refresh = () => {
                 });
             }
         } catch (error) {
+            console.log(error);
             res.status(500).send({
                 "message": "An error occurred while refreshing token",
                 "status": "error"
