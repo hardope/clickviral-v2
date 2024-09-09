@@ -23,4 +23,6 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
         script: |
+          echo $PATH
+          cd /home/ubuntu
           bash /home/ubuntu/reload 
