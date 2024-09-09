@@ -4,3 +4,4 @@ assets/
 dist
 *test.js
 *test.jpg
+*.html
