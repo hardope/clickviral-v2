@@ -12,12 +12,10 @@ const getUsers = () => {
                     "status": "not_found"
                 });
             } else {
-                users.forEach(element => {
-                    element = element.toJSON();
-                });
+                const usersJson = users.map(user => user.toJSON());
                 // If users found, send them as response
                 res.status(200).send({
-                    "data": users,
+                    "data": usersJson,
                     "message": "Users retrieved successfully",
                     "status": "success"
                 });

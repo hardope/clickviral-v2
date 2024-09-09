@@ -14,10 +14,10 @@ const getImages = () => {
                 return;
             }
 
-            images = images.map(image => image.toJSON());
+            let imagesJson = images.map(image => image.toJSON());
 
             res.status(200).send({
-                "data": images,
+                "data": imagesJson,
                 "message": "Images retrieved successfully",
                 "status": "success"
             });
