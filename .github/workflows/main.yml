@@ -23,8 +23,4 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
         script: |
-          cd /home/ubuntu/clickviral
-          pm2 stop 1
-          git pull origin master
-          npm install
-          pm2 start 1
+          bash /home/ubuntu/reload 
