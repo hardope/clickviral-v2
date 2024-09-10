@@ -58,8 +58,8 @@ userSchema.methods.toJSON = function() {
     delete userObject.last_login;
     userObject.id = userObject._id;
     delete userObject._id;
-    userObject.profileImage = ASSET_HOST + userObject.profileImage;
-    userObject.coverImage = ASSET_HOST + userObject.coverImage;
+    userObject.profileImage && (userObject.profileImage = ASSET_HOST + userObject.profileImage);
+    userObject.coverImage && (userObject.coverImage = ASSET_HOST + userObject.coverImage);
     return userObject;
 }
 
