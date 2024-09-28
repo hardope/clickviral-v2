@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Change to the specified directory
-cd /home/ubuntu/clickviral-v2
+cd /home/hardope/clickviral-v2
 
 # Run git pull
 git pull

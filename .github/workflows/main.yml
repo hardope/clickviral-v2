@@ -23,4 +23,4 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
         script: |
-          bash /home/ubuntu/clickviral-v2/reload.sh
+          bash /home/hardope/clickviral-v2/reload.sh
