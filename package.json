@@ -30,6 +30,7 @@
         "@types/passport-jwt": "^4.0.1",
         "@types/readline-sync": "^1.4.8",
         "@types/uuid": "^9.0.8",
+        "@types/ws": "^8.5.12",
         "axios": "^1.6.7",
         "bcrypt": "^5.1.1",
         "body-parser": "^1.20.2",
@@ -47,13 +48,17 @@
         "passport": "^0.7.0",
         "passport-jwt": "^4.0.1",
         "readline-sync": "^1.4.10",
+        "swagger-jsdoc": "^6.2.8",
+        "swagger-ui-express": "^5.0.1",
         "ts-jest": "^29.1.2",
         "ts-node": "^10.9.2",
         "typescript": "^5.5.4",
-        "uuid": "^9.0.1"
+        "uuid": "^9.0.1",
+        "ws": "^8.18.0"
     },
     "devDependencies": {
         "@types/supertest": "^6.0.2",
+        "@types/swagger-ui-express": "^4.1.6",
         "jest": "^29.7.0",
         "supertest": "^6.3.4",
         "types": "file:../../../../express"
