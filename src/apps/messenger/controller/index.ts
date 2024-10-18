@@ -1,6 +1,9 @@
 import { WebSocketServer } from "ws";
 // import { IncomingMessage } from 'http';
 import { authUser } from "../../../middleware/passport";
+import { sendMessage } from "./sendMessage";
+import { formatValidator } from "../validators";
+import { Message } from "../models";
 
 const wssMessenger = new WebSocketServer({ noServer: true });
 
@@ -8,31 +11,25 @@ wssMessenger.on('connection', async (ws: any, req: any) => {
     await authUser(ws, req);
     ws.user = req.user;
     ws.send(JSON.stringify({'message':'Connection successful - messenger'}));
-    ws.on('message', (message) => {
-        let parsedMessage;
-        try {
-            parsedMessage = JSON.parse(message.toString());
-        } catch (error) {
-            console.error('Invalid JSON:', error);
-            return;
-        }
-
-        const data = parsedMessage;
-
+    ws.on('message', async (message) => {
+        let data = formatValidator(ws, message);
+        
         if (data?.action == 'send_message') {
-            const recipient = data?.recipient;
-            const recipientClient = Array.from(wssMessenger.clients).find((client: any) => client.user && client.user.id === recipient);
-            if (recipientClient) {
-                recipientClient.send(JSON.stringify({
-                    message: data.message,
-                    sender: ws.user.id
-                }));
-            }
+            sendMessage(ws, wssMessenger, data);
+        } else if (data?.action == 'get_messages') {
+            let userMessages = await Message.find({ 
+                $or: [
+                    { recipient: ws.user.id }, 
+                    { sender: ws.user.id }
+                ] 
+            });
+            ws.send(JSON.stringify(userMessages));
+
         } else {
             wssMessenger.clients.forEach((client: any) => {
             
                 if (client.readyState === ws.OPEN && client != ws) {
-                    client.send(JSON.stringify(parsedMessage));
+                    client.send(JSON.stringify(data));
                 }
             });
         }
