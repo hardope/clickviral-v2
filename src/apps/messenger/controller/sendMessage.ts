@@ -3,7 +3,10 @@ import { Message } from "../models";
 import { validateMessage } from "../validators";
 
 const sendMessage = async (ws: any, wssMessenger: any, data) => {
-    validateMessage(ws, data);
+    
+    if (!validateMessage(ws, data)){
+        return;
+    }
 
     try {
         const recipient = await User.findById(data.recipient);

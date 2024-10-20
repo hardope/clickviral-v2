@@ -42,7 +42,10 @@ wssNotification.on('connection', (ws) => {
 });
 
 server.on('upgrade', (request, socket, head) => {
+
     const pathname = request.url;
+
+    console.log(`[${new Date().toISOString()} -- [WS] -- ${pathname}`);
 
     if (pathname == '/messenger') {
         wssMessenger.handleUpgrade(request, socket, head, (ws) => {

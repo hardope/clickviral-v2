@@ -9,10 +9,12 @@ import { getChats } from "./getChats";
 const wssMessenger = new WebSocketServer({ noServer: true });
 
 wssMessenger.on('connection', async (ws: any, req: any) => {
+
     await authUser(ws, req);
     ws.user = req.user;
     ws.send(JSON.stringify({'message':'Connection successful - messenger'}));
     ws.on('message', async (message) => {
+
         let data = formatValidator(ws, message);
         
         if (data?.action == 'send_message') {

@@ -43,4 +43,4 @@ const getChats = async (ws: any, _wssMessenger: any, _data) => {
     ws.send(JSON.stringify(chats));
 }
 
-export { getChats } 
+export { getChats }
