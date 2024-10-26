@@ -3,8 +3,8 @@ import { WebSocketServer } from "ws";
 import { authUser } from "../../../middleware/passport";
 import { sendMessage } from "./sendMessage";
 import { formatValidator } from "../validators";
-import { Message } from "../models";
 import { getChats } from "./getChats";
+import { getMessages } from "./getMessages";
 
 const wssMessenger = new WebSocketServer({ noServer: true });
 
@@ -22,13 +22,7 @@ wssMessenger.on('connection', async (ws: any, req: any) => {
         } else if (data?.action == 'get_chats') {
             getChats(ws, wssMessenger, data);
         } else if (data?.action == 'get_messages') {
-            let userMessages = await Message.find({ 
-                $or: [
-                    { recipient: ws.user.id }, 
-                    { sender: ws.user.id }
-                ] 
-            });
-            ws.send(JSON.stringify(userMessages));
+            getMessages(ws, wssMessenger, data);
 
         } else {
             ws.send(JSON.stringify({'message':'Invalid action'}));
