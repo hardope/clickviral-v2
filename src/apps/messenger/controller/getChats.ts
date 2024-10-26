@@ -4,13 +4,18 @@ import { Message } from "../models";
 const getChats = async (ws: any, _wssMessenger: any, _data) => {
     const user = ws.user;
 
+    if (!user || !user.id) {
+        console.error("User or user ID is not defined");
+        return;
+    }
+
     // Fetch all messages involving the user in one query
-    const userMessages = await Message.find({
+    const userMessages = (await Message.find({
         $or: [
             { recipient: user.id },
             { sender: user.id }
         ]
-    }).lean();
+    }).sort({ created_at: -1 })).map(message => message.toJSON());
 
     // Use a Map to store the latest message for each user
     const latestMessagesMap = new Map<string, any>();
@@ -27,8 +32,8 @@ const getChats = async (ws: any, _wssMessenger: any, _data) => {
     const userIds = Array.from(latestMessagesMap.keys());
 
     // Fetch all user data in one query
-    const users = await User.find({ _id: { $in: userIds } }).lean();
-    const usersMap = new Map(users.map(user => [user._id.toString(), user]));
+    const users = await User.find({ _id: { $in: userIds } });
+    const usersMap = new Map(users.map(user => [user._id.toString(), user.toJSON()]));
 
     const chats = userIds.map(id => {
         const lastMessage = latestMessagesMap.get(id);
