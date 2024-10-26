@@ -1,0 +1,46 @@
+import { User } from "../../user/models";
+import { Message } from "../models";
+
+const getChats = async (ws: any, _wssMessenger: any, _data) => {
+    const user = ws.user;
+
+    // Fetch all messages involving the user in one query
+    const userMessages = await Message.find({
+        $or: [
+            { recipient: user.id },
+            { sender: user.id }
+        ]
+    }).lean();
+
+    // Use a Map to store the latest message for each user
+    const latestMessagesMap = new Map<string, any>();
+
+    userMessages.forEach((message) => {
+        const otherUserId = message.sender === user.id ? message.recipient : message.sender;
+        const existingMessage = latestMessagesMap.get(`${otherUserId}`);
+
+        if (!existingMessage || new Date(message.created_at) > new Date(existingMessage.createdAt)) {
+            latestMessagesMap.set(`${otherUserId}`, message);
+        }
+    });
+
+    const userIds = Array.from(latestMessagesMap.keys());
+
+    // Fetch all user data in one query
+    const users = await User.find({ _id: { $in: userIds } }).lean();
+    const usersMap = new Map(users.map(user => [user._id.toString(), user]));
+
+    const chats = userIds.map(id => {
+        const lastMessage = latestMessagesMap.get(id);
+        const userData = usersMap.get(id);
+
+        return {
+            user: userData,
+            lastMessage: lastMessage
+        };
+    });
+
+    ws.send(JSON.stringify(chats));
+}
+
+export { getChats }
