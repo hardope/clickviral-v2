@@ -1,5 +1,5 @@
 import express from 'express';
-import router from './routes/index';
+import userRouter from './apps/user/route';
 import connectDB from './database/connect';
 import bodyParser from 'body-parser';
 import logger from './middleware/logger';
@@ -47,7 +47,7 @@ server.on('upgrade', (request, socket, head) => {
 
     console.log(`[${new Date().toISOString()} -- [WS] -- ${pathname}`);
 
-    if (pathname == '/messenger') {
+    if (pathname?.startsWith('/messenger')) {
         wssMessenger.handleUpgrade(request, socket, head, (ws) => {
             wssMessenger.emit('connection', ws, request);
         });
@@ -71,7 +71,7 @@ app.get('/', (_req, res) => {
     res.send('<h1>ClickViral Backend API V2</h1>');
 });
 
-app.use('/', router);
+app.use('/user', userRouter);
 
 server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

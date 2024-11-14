@@ -10,9 +10,15 @@ const wssMessenger = new WebSocketServer({ noServer: true });
 
 wssMessenger.on('connection', async (ws: any, req: any) => {
 
+    if (req.url?.split('/').length == 3) {
+        req.headers['authorization'] = 'Bearer ' + req.url.split('/')[2];
+    }
+
     await authUser(ws, req);
+
     ws.user = req.user;
     ws.send(JSON.stringify({'message':'Connection successful - messenger'}));
+    getChats(ws, wssMessenger, {action: 'get_chats'});  
     ws.on('message', async (message) => {
 
         let data = formatValidator(ws, message);

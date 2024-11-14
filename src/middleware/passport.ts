@@ -43,6 +43,7 @@ const authUser = async (ws: any, req: any) => {
             ws.close(4001, 'Unauthorized')
         }
         req.user = user
+
     } catch (error) {
         console.log(error)
         ws.close(4001, 'Invalid Token')
