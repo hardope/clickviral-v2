@@ -2,6 +2,8 @@ import { User } from "../../user/models";
 import { Message } from "../models";
 import { validateMessage } from "../validators";
 import { v4 as uuidv4 } from 'uuid';
+import { getMessages } from "./getMessages";
+import { getChats } from "./getChats";
 
 const sendMessage = async (ws: any, wssMessenger: any, data) => {
     
@@ -31,8 +33,12 @@ const sendMessage = async (ws: any, wssMessenger: any, data) => {
                 recipient: recipient?.id,
                 message: data.message
             });
+            const messages = await getMessages(ws, wssMessenger, { recipient: recipient?.id });
+            if (messages?.length == 1) {
+                getChats(ws, wssMessenger, { action: 'get_chats' });
+            }
         }
-        
+
         const recipientClient: any = Array.from(wssMessenger.clients).find((client: any) => client.user && client.user.id === recipient?.id);
         if (recipientClient) {
             if (data.reply) {

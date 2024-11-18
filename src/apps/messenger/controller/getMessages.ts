@@ -1,7 +1,7 @@
 // import { User } from "../../user/models";
 import { Message } from "../models";
 
-const getMessages = async (ws: any, _wssMessenger: any, data: any) => {
+const getMessages = async (ws: any, _wssMessenger: any, data: any): Promise<any[]> => {
     try {
         const messages = await Message.find({
             $or: [
@@ -15,9 +15,11 @@ const getMessages = async (ws: any, _wssMessenger: any, data: any) => {
         });
 
         ws.send(JSON.stringify(formattedMessages));
+        return formattedMessages;
     } catch (error) {
         console.log(error);
         ws.send(JSON.stringify({ message: 'Error fetching messages' }));
+        return []
     }
 }
 
