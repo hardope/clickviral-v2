@@ -16,8 +16,6 @@ const getChats = async (ws: any, _wssMessenger: any, _data) => {
             { sender: user.id }
         ]
     }).sort({ created_at: -1 })).map(message => message.toJSON());
-    console.log(`${userMessages.length} messages found`);
-
     // Use a Map to store the latest message for each user
     const latestMessagesMap = new Map<string, any>();
 
@@ -40,12 +38,10 @@ const getChats = async (ws: any, _wssMessenger: any, _data) => {
         const lastMessage = latestMessagesMap.get(id);
         const userData = usersMap.get(id);
 
-        console.log(id);
-
         return {
             user: userData,
             lastMessage: lastMessage,
-            unread: userMessages.filter(message => message.read === false && `${message.recipient}` === id).length
+            unread: userMessages.filter(message => message.read === false && `${message.sender}` === id).length
         };
     });
 
