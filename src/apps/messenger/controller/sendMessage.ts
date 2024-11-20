@@ -43,6 +43,7 @@ const sendMessage = async (ws: any, wssMessenger: any, data) => {
         if (recipientClient) {
             if (data.reply) {
                 recipientClient.send(JSON.stringify({
+                    action: 'receive_message',
                     message: data.message,
                     id: messageId,
                     sender: ws.user.id,
@@ -50,6 +51,7 @@ const sendMessage = async (ws: any, wssMessenger: any, data) => {
                 }));
             } else {
                 recipientClient.send(JSON.stringify({
+                    action: 'receive_message',
                     message: data.message,
                     id: messageId,
                     sender: ws.user.id

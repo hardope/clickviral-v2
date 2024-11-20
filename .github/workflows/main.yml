@@ -9,7 +9,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  server-deploy:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -24,3 +24,17 @@ jobs:
         port: 22
         script: |
           bash /home/hardope/clickviral-v2/reload.sh
+
+  automated-api-tests:
+    needs: server-deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Postman CLI
+        run: |
+          curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+      - name: Login to Postman CLI
+        run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
+      - name: Run API tests
+        run: |
+          postman collection run "29404028-6c0426ab-37c1-449b-8ca2-ef6a3bbbd22d" -e "29404028-0fae1d9a-8f99-4df4-a9f2-f1def1dec501"

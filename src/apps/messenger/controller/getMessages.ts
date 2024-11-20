@@ -14,7 +14,11 @@ const getMessages = async (ws: any, _wssMessenger: any, data: any): Promise<any[
             return message.toJSON();
         });
 
-        ws.send(JSON.stringify(formattedMessages));
+        ws.send(JSON.stringify({
+            action: 'get_messages',
+            recipient: data.recipient,
+            messages: formattedMessages
+        }));
         return formattedMessages;
     } catch (error) {
         console.log(error);
