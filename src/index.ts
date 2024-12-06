@@ -21,7 +21,8 @@ const corsOptions = {
         if (ALLOWED_HOSTS.includes(origin) || ALLOWED_HOSTS.includes('*') || origin.startsWith('http://localhost')) {
             return callback(null, true);
         }
-        callback(new Error('Not allowed by CORS'));
+        // callback(new Error('Not allowed by CORS'));
+        return true
     }
 };
 
