@@ -25,6 +25,31 @@ messageSchema.methods.toJSON = function() {
     return messageObject;
 }
 
+const chatSchema = new Schema({
+    id: { type: String, default: uuidv4() },
+    initialized_by: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    admin: { type: [Schema.Types.ObjectId], ref: 'User', default: [] },
+    users: { type: [Schema.Types.ObjectId], ref: 'User', default: [] },
+    messages: { type: [messageSchema], default: [] },
+    created_at: { type: Date, default: Date.now },
+    last_message: { type: Schema.Types.ObjectId, ref: 'Message', default: null },
+});
+
+chatSchema.methods.toJSON = function() {
+    const chatObject = this.toObject();
+    delete chatObject.__v;
+    chatObject.id = chatObject._id;
+    delete chatObject._id;
+    return chatObject;
+}
+
+const Chat = mongoose.model('Chat', chatSchema);
+
 const Message = mongoose.model('Message', messageSchema);
 
-export { Message, messageSchema };
+export {
+    Chat,
+    Message,
+    messageSchema,
+    chatSchema
+};
