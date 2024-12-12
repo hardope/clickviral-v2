@@ -1,5 +1,67 @@
 import { User } from "../../user/models";
-import { Message } from "../models";
+import { Message, Chat } from "../models";
+
+
+const createChat = async (ws: any, _wssMessenger: any, data) => {
+    const user = ws.user;
+    console.log(data.recipient);
+    if (!user || !user.id) {
+        console.error("User or user ID is not defined");
+        return;
+    }
+
+    if (!data.recipient) {
+        ws.send(JSON.stringify({
+            action: 'create_chat',
+            status: false,
+            message: 'Recipient is not defined'
+        }));
+        return;
+    }
+
+    const recipient = await User.findById(data.recipient);
+    console.log(recipient);
+
+    if (!recipient) {
+        ws.send(JSON.stringify({
+            action: 'create_chat',
+            status: false,
+            message: 'Recipient not found'
+        }));
+        return;
+    }
+
+    const existingChat = await Chat.findOne({
+        type: 'private',
+        users: { $all: [user.id, recipient.id] }
+    });
+
+    console.log(existingChat)
+
+    if (existingChat) {
+        console.log("----------------------------------");
+        ws.send(JSON.stringify({
+            action: 'create_chat',
+            status: false,
+            message: 'chat already exists',
+            chat: existingChat.toJSON()
+        }));
+
+        return;
+    }
+
+    const chat = await new Chat({
+        initialized_by: user.id,
+        users: [user.id, recipient.id]
+    });
+
+    console.log(chat.toJSON());
+
+    ws.send(JSON.stringify({
+        action: 'create_chat',
+        chat: await chat.toJSON()
+    }));
+}
 
 const getChats = async (ws: any, _wssMessenger: any, _data) => {
     const user = ws.user;
@@ -51,4 +113,4 @@ const getChats = async (ws: any, _wssMessenger: any, _data) => {
     }));
 }
 
-export { getChats }
+export { getChats, createChat };

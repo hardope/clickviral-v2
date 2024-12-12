@@ -28,6 +28,7 @@ messageSchema.methods.toJSON = function() {
 const chatSchema = new Schema({
     id: { type: String, default: uuidv4() },
     initialized_by: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    type: { type: String, enum: ['private', 'group'], default: 'private' },
     admin: { type: [Schema.Types.ObjectId], ref: 'User', default: [] },
     users: { type: [Schema.Types.ObjectId], ref: 'User', default: [] },
     messages: { type: [messageSchema], default: [] },
@@ -35,11 +36,16 @@ const chatSchema = new Schema({
     last_message: { type: Schema.Types.ObjectId, ref: 'Message', default: null },
 });
 
-chatSchema.methods.toJSON = function() {
+chatSchema.methods.toJSON = async function() {
     const chatObject = this.toObject();
     delete chatObject.__v;
     chatObject.id = chatObject._id;
     delete chatObject._id;
+
+    // if (chatObject.type === 'private') {
+    //     chatObject.users = (await User.find({ id: { $in: chatObject.users } })).map(user => user.toJSON());
+    // }
+
     return chatObject;
 }
 
