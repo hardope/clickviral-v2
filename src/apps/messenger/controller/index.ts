@@ -3,7 +3,7 @@ import { WebSocketServer } from "ws";
 import { authUser } from "../../../middleware/passport";
 import { sendMessage } from "./sendMessage";
 import { formatValidator } from "../validators";
-import { getChats } from "./getChats";
+import { createChat, getChats } from "./getChats";
 import { getMessages } from "./getMessages";
 
 const wssMessenger = new WebSocketServer({ noServer: true });
@@ -30,6 +30,8 @@ wssMessenger.on('connection', async (ws: any, req: any) => {
         } else if (data?.action == 'get_messages') {
             getMessages(ws, wssMessenger, data);
 
+        } else if (data?.action == 'create_chat') {
+            createChat(ws, wssMessenger, data);
         } else {
             ws.send(JSON.stringify({'message':'Invalid action'}));
         }
