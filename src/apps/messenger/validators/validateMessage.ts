@@ -1,7 +1,7 @@
 const validateMessage = (ws: any, message: any) => {
     const errors: any = [];
 
-    const requiredFields = ['message', 'recipient'];
+    const requiredFields = ['message', 'chat'];
 
     requiredFields.forEach(field => {
         switch (field) {
@@ -12,13 +12,13 @@ const validateMessage = (ws: any, message: any) => {
                     errors.push('Message must be a string');
                 }
                 break;
-            case 'recipient':
+            case 'chat':
                 if (!message.hasOwnProperty(field)) {
-                    errors.push('Recipient is required');
+                    errors.push('Chat is required');
                 } else if (typeof message[field] !== 'string') {
-                    errors.push('Recipient must be a string');
+                    errors.push('Chat must be a string');
                 } else if (message[field].length < 1) {
-                    errors.push('Recipient cannot be empty');
+                    errors.push('Chat cannot be empty');
                 }
                 break;
         }
