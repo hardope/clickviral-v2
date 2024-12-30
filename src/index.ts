@@ -10,6 +10,7 @@ import { passportConfig } from './middleware/passport';
 import { WebSocketServer } from 'ws';
 import http from 'http';
 import { wssMessenger } from './apps/messenger/controller';
+import postRouter from './apps/posts/route';
 
 const corsOptions = {
     origin: (origin: any, callback: any) => {
@@ -73,6 +74,7 @@ app.get('/', (_req, res) => {
 });
 
 app.use('/user', userRouter);
+app.use('/posts', postRouter);
 
 server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
