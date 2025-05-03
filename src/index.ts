@@ -70,7 +70,7 @@ app.use(logger());
 app.use(passport.initialize());
 
 app.get('/', (_req, res) => {
-    res.send('<h1>ClickViral Backend API V2</h1>');
+    res.send('<h1>Click-Viral Backend API V2</h1>');
 });
 
 app.use('/user', userRouter);
